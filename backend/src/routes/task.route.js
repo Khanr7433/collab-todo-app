@@ -13,9 +13,9 @@ const router = express.Router();
 
 router.get("/gettask", authMiddleware, getTasks);
 router.post("/createtask", authMiddleware, createTask);
-router.put("/updatetask/:id", authMiddleware, updateTask);
-router.patch("/updatetaskstatus/:id", authMiddleware, updateTaskStatus);
-router.delete("/deletetask/:id", authMiddleware, deleteTask);
-router.post("/assigntask/:id", authMiddleware, assignTask);
+router.put("/updatetask/:_id", authMiddleware, updateTask);
+router.patch("/updatetaskstatus/:_id", authMiddleware, updateTaskStatus);
+router.delete("/deletetask/:_id", authMiddleware, deleteTask);
+router.post("/assigntask/:_id", authMiddleware, assignTask);
 
 export default router;

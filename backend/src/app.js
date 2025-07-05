@@ -11,7 +11,15 @@ app.use(
     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "X-CSRF-Token",
+      "Accept",
+      "X-Requested-With",
+      "X-HTTP-Method-Override",
+    ],
   })
 );
 app.use(cookieParser());
