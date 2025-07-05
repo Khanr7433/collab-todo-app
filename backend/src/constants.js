@@ -1,4 +1,4 @@
-export const DB_NAME = "collab-to-app";
+export const DB_NAME = "collab-todo-app";
 
 export const cookieOptions = {
   secure: true,
