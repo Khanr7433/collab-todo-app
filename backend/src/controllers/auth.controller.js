@@ -86,4 +86,11 @@ const userLogin = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, userLogin };
+const userLogout = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .clearCookie("token", cookieOptions)
+    .json(new ApiResponse(200, {}, "User logged out successfully"));
+});
+
+export { registerUser, userLogin, userLogout };
