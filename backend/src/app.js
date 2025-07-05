@@ -10,6 +10,7 @@ app.use(
   cors({
     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    credentials: true,
   })
 );
 app.use(cookieParser());
@@ -20,11 +21,10 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the Collab Todo App");
-});
 import authRoutes from "./routes/auth.route.js";
+import actionLogRoutes from "./routes/actionLog.route.js";
 
 app.use("/api/auth", authRoutes);
+app.use("/api/actionlogs", actionLogRoutes);
 
 export default app;
