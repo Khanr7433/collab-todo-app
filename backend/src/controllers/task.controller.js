@@ -1,4 +1,4 @@
-import { Task } from "../models/task.model.js";
+import { Task } from "../models/tasks.model.js";
 import { ActionLog } from "../models/actionLog.model.js";
 import smartAssign from "../utils/smartAssign.js";
 import asyncHandler from "../utils/asyncHandler.js";

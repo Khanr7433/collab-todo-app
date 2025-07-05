@@ -1,4 +1,4 @@
-import { Task } from "../models/task.model.js";
+import { Task } from "../models/tasks.model.js";
 import { User } from "../models/users.model.js";
 
 const smartAssign = async () => {
