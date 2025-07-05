@@ -1,9 +1,8 @@
 import User from "../models/user.model.js";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/apiError.js";
 import ApiResponse from "../utils/apiResponse.js";
+import { cookieOptions } from "../constants.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -41,4 +40,50 @@ const registerUser = asyncHandler(async (req, res) => {
   );
 });
 
-export { registerUser };
+const userLogin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new ApiError(400, "Please provide email and password");
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(401, "Invalid email or password");
+  }
+
+  const isPasswordValid = await user.comparePassword(password);
+
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Invalid email or password");
+  }
+
+  const token = user.generateJWTToken();
+
+  if (!token) {
+    throw new ApiError(500, "Failed to generate authentication token");
+  }
+
+  const loggedInUser = await User.findById(user._id).select("-password");
+
+  if (!loggedInUser) {
+    throw new ApiError(500, "Something went wrong while logging in user");
+  }
+
+  res
+    .status(200)
+    .cookie("token", token, cookieOptions)
+    .json(
+      new ApiResponse(
+        200,
+        {
+          user: loggedInUser,
+          token,
+        },
+        "User logged in successfully"
+      )
+    );
+});
+
+export { registerUser, userLogin };
