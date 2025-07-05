@@ -1,10 +1,10 @@
-import User from "../models/user.model.js";
+import { User } from "../models/users.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/apiError.js";
 import ApiResponse from "../utils/apiResponse.js";
 import { cookieOptions } from "../constants.js";
 
-const registerUser = asyncHandler(async (req, res) => {
+const userRegister = asyncHandler(async (req, res) => {
   const { fullName, email, password } = req.body;
 
   if (!fullName || !email || !password) {
@@ -93,4 +93,4 @@ const userLogout = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
-export { registerUser, userLogin, userLogout };
+export { userRegister, userLogin, userLogout };

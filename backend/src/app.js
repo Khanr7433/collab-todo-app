@@ -23,5 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("Welcome to the Collab Todo App");
 });
+import authRoutes from "./routes/auth.route.js";
+
+app.use("/api/auth", authRoutes);
 
 export default app;

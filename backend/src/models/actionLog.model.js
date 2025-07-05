@@ -11,7 +11,7 @@ const actionLogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    taskId: {
+    task: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Task",
       required: true,
