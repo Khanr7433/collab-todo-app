@@ -10,6 +10,10 @@ const getTasks = asyncHandler(async (req, res) => {
     .populate("assignedTo", "fullName")
     .populate("createdBy", "fullName");
 
+  if (!tasks || tasks.length === 0) {
+    throw new ApiError(404, "No tasks found");
+  }
+
   res
     .status(200)
     .json(new ApiResponse(200, { tasks }, "Tasks fetched successfully"));
@@ -39,18 +43,11 @@ const createTask = asyncHandler(async (req, res) => {
     throw new ApiError(400, "User not authenticated");
   }
 
-  const assignedTo = await smartAssign();
-
-  if (!assignedTo) {
-    throw new ApiError(500, "No users available for task assignment");
-  }
-
   const task = await Task.create({
     title,
     description,
     priority,
     createdBy,
-    assignedTo,
   });
 
   if (!task) {
@@ -82,15 +79,19 @@ const createTask = asyncHandler(async (req, res) => {
 });
 
 const updateTask = asyncHandler(async (req, res) => {
-  const { _id } = req.params;
+  const { id } = req.params;
 
-  const { title, description, status, priority } = req.body;
-
-  if (!_id) {
+  if (!id) {
     throw new ApiError(400, "Task ID is required");
   }
 
-  const task = await Task.findById(_id);
+  const { title, description, status, priority } = req.body;
+
+  if (!title && !description && !status && !priority) {
+    throw new ApiError(400, "At least one field is required for update");
+  }
+
+  const task = await Task.findById(id);
 
   if (!task) {
     throw new ApiError(404, "Task not found");
@@ -105,6 +106,10 @@ const updateTask = asyncHandler(async (req, res) => {
   }
 
   if (status) {
+    const validStatuses = ["Todo", "in-progress", "completed"];
+    if (!validStatuses.includes(status)) {
+      throw new ApiError(400, "Invalid status value");
+    }
     task.status = status;
   }
 
@@ -125,7 +130,7 @@ const updateTask = asyncHandler(async (req, res) => {
   const actionLog = await ActionLog.create({
     action: "Task Updated",
     user: req.user._id,
-    task: _id,
+    task: id,
   });
 
   if (!actionLog) {
@@ -140,14 +145,14 @@ const updateTask = asyncHandler(async (req, res) => {
 });
 
 const updateTaskStatus = asyncHandler(async (req, res) => {
-  const { _id } = req.params;
+  const { id } = req.params;
   const { status } = req.body;
 
-  if (!_id) {
+  if (!id) {
     throw new ApiError(400, "Task ID is required");
   }
 
-  const task = await Task.findById(_id);
+  const task = await Task.findById(id);
 
   if (!task) {
     throw new ApiError(404, "Task not found");
@@ -170,7 +175,7 @@ const updateTaskStatus = asyncHandler(async (req, res) => {
   const actionLog = await ActionLog.create({
     action: "Task Status Updated",
     user: req.user._id,
-    task: _id,
+    task: id,
   });
 
   if (!actionLog) {
@@ -192,19 +197,19 @@ const updateTaskStatus = asyncHandler(async (req, res) => {
 });
 
 const deleteTask = asyncHandler(async (req, res) => {
-  const { _id } = req.params;
+  const { id } = req.params;
 
-  if (!_id) {
+  if (!id) {
     throw new ApiError(400, "Task ID is required");
   }
 
-  const task = await Task.findById(_id);
+  const task = await Task.findById(id);
 
   if (!task) {
     throw new ApiError(404, "Task not found");
   }
 
-  const deletedTask = await task.remove();
+  const deletedTask = await Task.findByIdAndDelete(id);
 
   if (!deletedTask) {
     throw new ApiError(500, "Something went wrong while deleting task");
@@ -213,7 +218,7 @@ const deleteTask = asyncHandler(async (req, res) => {
   const actionLog = await ActionLog.create({
     action: "Task Deleted",
     user: req.user._id,
-    task: _id,
+    task: id,
   });
 
   if (!actionLog) {
@@ -224,13 +229,13 @@ const deleteTask = asyncHandler(async (req, res) => {
 });
 
 const assignTask = asyncHandler(async (req, res) => {
-  const { _id } = req.params;
+  const { id } = req.params;
 
-  if (!_id) {
+  if (!id) {
     throw new ApiError(400, "Task ID is required");
   }
 
-  const task = await Task.findById(_id);
+  const task = await Task.findById(id);
 
   if (!task) {
     throw new ApiError(404, "Task not found");
@@ -257,7 +262,7 @@ const assignTask = asyncHandler(async (req, res) => {
   const actionLog = await ActionLog.create({
     action: "Task Assigned",
     user: req.user._id,
-    task: _id,
+    task: id,
   });
 
   if (!actionLog) {
