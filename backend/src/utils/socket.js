@@ -14,6 +14,10 @@ const socketHandler = (io) => {
       socket.broadcast.emit("taskDeleted", id);
     });
 
+    socket.on("moveTask", (data) => {
+      socket.broadcast.emit("taskMoved", data);
+    });
+
     socket.on("disconnect", () => {
       console.log("🔴 Client disconnected");
     });
