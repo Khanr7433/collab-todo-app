@@ -4,7 +4,6 @@ import ApiResponse from "../utils/apiResponse.js";
 import ApiError from "../utils/apiError.js";
 
 const getLogs = asyncHandler(async (req, res) => {
-  // sort in decending order by timestamp and limit to 20 most recent logs
   const logs = await ActionLog.find()
     .sort({ timestamp: -1 })
     .limit(20)
