@@ -16,11 +16,15 @@ const Header = () => {
         </nav>
 
         <div className="flex justify-between align-center gap-1">
-          <div className="username">
+          {/* <div className="username">
             <i className="fa fa-user"></i>
             <span className="username">Rashid Khan</span>
+          </div> */}
+          <div className="user-info flex items-center gap-2">
+            <button className="button">Register</button>
+            <button className="button">Login</button>
+            <button className="button">Logout</button>
           </div>
-          <button className="logout-button">Logout</button>
         </div>
       </div>
     </header>
