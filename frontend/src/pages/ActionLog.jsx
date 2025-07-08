@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import API from "../services/api";
 
 const ActionLog = () => {
-  return <div className="container mx-auto p-4 max-w-7xl">ActionLog</div>;
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {}, []);
+
+  return (
+    <div className="action-log">
+      <h4>Action Log</h4>
+      <ul>
+        {logs.map((log) => (
+          <li key={log._id}>
+            {log.user?.name} - {log.action}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default ActionLog;
