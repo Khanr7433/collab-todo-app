@@ -11,14 +11,14 @@ const Header = () => {
   };
 
   return (
-    <header className="header bg-gray-800 text-white shadow-lg">
+    <header className="border-b shadow-sm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link
               to="/"
-              className="text-xl font-bold hover:text-blue-400 transition-colors"
+              className="text-xl font-bold hover:text-blue-600 transition-all"
             >
               Collab Todo App
             </Link>
@@ -29,13 +29,13 @@ const Header = () => {
             <nav className="hidden md:flex space-x-8">
               <Link
                 to="/kanbanboard"
-                className="hover:text-blue-400 transition-colors"
+                className="hover:text-blue-600 transition-all"
               >
                 Kanban Board
               </Link>
               <Link
                 to="/actionlog"
-                className="hover:text-blue-400 transition-colors"
+                className="hover:text-blue-600 transition-all"
               >
                 Action Logs
               </Link>
@@ -50,7 +50,7 @@ const Header = () => {
                   Welcome, {user?.data?.user?.fullName}
                 </span>
                 <Link
-                  className="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 transition-colors"
+                  className="border px-3 py-2 rounded hover:text-blue-600 hover:border-blue-600 transition-all"
                   to="/logout"
                 >
                   Logout
@@ -59,13 +59,13 @@ const Header = () => {
             ) : (
               <>
                 <Link
-                  className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors"
+                  className="border px-3 py-2 rounded hover:text-blue-600 hover:border-blue-600 transition-all"
                   to="/register"
                 >
                   Register
                 </Link>
                 <Link
-                  className="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 transition-colors"
+                  className="border px-3 py-2 rounded hover:text-blue-600 hover:border-blue-600 transition-all"
                   to="/login"
                 >
                   Login
@@ -78,7 +78,7 @@ const Header = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="text-white hover:text-blue-400 focus:outline-none focus:text-blue-400"
+              className="p-2 rounded hover:text-blue-600 transition-all"
             >
               <svg
                 className="h-6 w-6"
@@ -108,28 +108,30 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-700">
+          <div className="md:hidden border-t">
+            <div className="px-2 pt-2 pb-3 space-y-1">
               {user && (
                 <>
+                  <div className="px-3 py-2 text-sm font-medium">
+                    Welcome, {user?.data?.user?.fullName}
+                  </div>
                   <Link
                     to="/kanbanboard"
-                    className="block px-3 py-2 text-white hover:bg-gray-600 rounded"
+                    className="block px-3 py-2 rounded hover:text-blue-600 transition-all"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Kanban Board
                   </Link>
                   <Link
                     to="/actionlog"
-                    className="block px-3 py-2 text-white hover:bg-gray-600 rounded"
+                    className="block px-3 py-2 rounded hover:text-blue-600 transition-all"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Action Logs
                   </Link>
-
                   <Link
                     to="/logout"
-                    className="block px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    className="block px-3 py-2 border rounded hover:text-blue-600 hover:border-blue-600 transition-all"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Logout
@@ -140,14 +142,14 @@ const Header = () => {
                 <>
                   <Link
                     to="/register"
-                    className="block px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mb-2"
+                    className="block px-3 py-2 border rounded hover:text-blue-600 hover:border-blue-600 transition-all mb-2"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Register
                   </Link>
                   <Link
                     to="/login"
-                    className="block px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    className="block px-3 py-2 border rounded hover:text-blue-600 hover:border-blue-600 transition-all"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Login

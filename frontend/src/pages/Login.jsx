@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../services/authApi";
 import toast from "react-hot-toast";
@@ -37,68 +37,86 @@ const Login = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-7xl">
-      <div className="flex items-center justify-center min-h-screen">
-        <form className="p-6 rounded shadow-md bg-gray-900 w-full max-w-sm">
-          <h1 className="text-2xl font-bold mb-4 text-white text-center">
-            Login
-          </h1>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-400"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={userData.email}
-              onChange={(e) =>
-                setUserData({ ...userData, email: e.target.value })
-              }
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              disabled={loading}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-400"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={userData.password}
-              onChange={(e) =>
-                setUserData({ ...userData, password: e.target.value })
-              }
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              disabled={loading}
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full ${
-              loading ? "bg-gray-600" : "bg-black"
-            } border text-white hover:border-gray-600 p-2 rounded-md`}
-            onClick={handleSubmit}
+    <div className="min-h-screen flex flex-col justify-center py-6 px-4 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="mt-6 text-center text-2xl sm:text-3xl font-extrabold">
+          Sign in to your account
+        </h2>
+        <p className="mt-2 text-center text-sm">
+          Or{" "}
+          <Link
+            to="/register"
+            className="font-medium hover:text-blue-600 transition-all"
           >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-          <p className="mt-4 text-center text-gray-400">
-            Don't have an account?{" "}
-            <a href="/register" className="text-blue-500 hover:underline">
-              Register
-            </a>
-          </p>
-        </form>
+            create a new account
+          </Link>
+        </p>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="border shadow-lg py-6 px-4 sm:rounded-lg sm:px-10">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-400"
+              >
+                Email address
+              </label>
+              <div className="mt-1">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={userData.email}
+                  onChange={(e) =>
+                    setUserData({ ...userData, email: e.target.value })
+                  }
+                  disabled={loading}
+                  className="appearance-none block w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-600 text-sm sm:text-base transition-all"
+                  placeholder="Enter your email"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-400"
+              >
+                Password
+              </label>
+              <div className="mt-1">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  value={userData.password}
+                  onChange={(e) =>
+                    setUserData({ ...userData, password: e.target.value })
+                  }
+                  disabled={loading}
+                  className="appearance-none block w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-600 text-sm sm:text-base transition-all"
+                  placeholder="Enter your password"
+                />
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-2 px-4 border text-sm font-medium rounded-md hover:text-blue-600 hover:border-blue-600 focus:outline-none transition-all"
+              >
+                {loading ? "Signing in..." : "Sign in"}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
