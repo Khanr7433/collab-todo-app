@@ -1,5 +1,5 @@
 import API from "./apiHandler.js";
 
-const getActionLogs = () => API.get("/actionlogs/getlogs");
+const getActionLogs = () => API.get("/api/actionlogs/getlogs");
 
 export { getActionLogs };

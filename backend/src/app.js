@@ -6,6 +6,7 @@ import { CORS_OPTIONS } from "./constants.js";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import socketHandler from "./utils/socket.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 dotenv.config();
 
@@ -38,5 +39,7 @@ import taskRoutes from "./routes/task.route.js";
 app.use("/api/auth", authRoutes);
 app.use("/api/actionlogs", actionLogRoutes);
 app.use("/api/tasks", taskRoutes);
+
+app.use(errorHandler);
 
 export { app, httpServer };

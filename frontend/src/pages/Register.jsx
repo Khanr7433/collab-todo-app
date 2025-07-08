@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../services/authApi";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -6,10 +9,30 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("User Data Submitted:", userData);
+    setLoading(true);
+
+    try {
+      const response = await registerUser(userData);
+      toast.success("Registration successful! Please login.");
+      setUserData({ fullName: "", email: "", password: "" });
+      navigate("/login");
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Registration failed. Please try again.";
+      toast.error(errorMessage);
+      console.error("Registration error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -73,10 +96,13 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full bg-black text-white p-2 rounded-md"
+            disabled={loading}
+            className={`w-full ${
+              loading ? "bg-gray-600" : "bg-black"
+            } border text-white hover:border-gray-600 p-2 rounded-md`}
             onClick={handleSubmit}
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
           <p className="mt-4 text-center text-gray-400">
             Already have an account?{" "}

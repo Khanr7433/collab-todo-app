@@ -1,14 +1,39 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { loginUser } from "../services/authApi";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [userData, setUserData] = useState({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("User Data Submitted:", userData);
+    setLoading(true);
+
+    try {
+      const response = await loginUser(userData);
+      toast.success("Login successful!");
+      login(response.data);
+      navigate("/");
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Login failed. Please try again.";
+      toast.error(errorMessage);
+      console.error("Login error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,6 +58,8 @@ const Login = () => {
                 setUserData({ ...userData, email: e.target.value })
               }
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              disabled={loading}
+              required
             />
           </div>
           <div className="mb-4">
@@ -50,15 +77,20 @@ const Login = () => {
                 setUserData({ ...userData, password: e.target.value })
               }
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              disabled={loading}
+              required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-black text-white p-2 rounded-md"
+            disabled={loading}
+            className={`w-full ${
+              loading ? "bg-gray-600" : "bg-black"
+            } border text-white hover:border-gray-600 p-2 rounded-md`}
             onClick={handleSubmit}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
           <p className="mt-4 text-center text-gray-400">
             Don't have an account?{" "}

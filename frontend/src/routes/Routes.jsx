@@ -13,6 +13,7 @@ import {
   Logout,
 } from "../pages";
 import Layout from "../layout";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 const AppRoutes = createBrowserRouter(
   createRoutesFromElements(
@@ -20,9 +21,31 @@ const AppRoutes = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/logout" element={<Logout />} />
-      <Route path="/kanbanboard" element={<KanbanBoard />} />
-      <Route path="/actionlog" element={<ActionLog />} />
+
+      <Route
+        path="/logout"
+        element={
+          <ProtectedRoutes>
+            <Logout />
+          </ProtectedRoutes>
+        }
+      />
+      <Route
+        path="/kanbanboard"
+        element={
+          <ProtectedRoutes>
+            <KanbanBoard />
+          </ProtectedRoutes>
+        }
+      />
+      <Route
+        path="/actionlog"
+        element={
+          <ProtectedRoutes>
+            <ActionLog />
+          </ProtectedRoutes>
+        }
+      />
     </Route>
   )
 );
