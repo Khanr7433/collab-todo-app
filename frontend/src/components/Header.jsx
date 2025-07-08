@@ -5,13 +5,19 @@ const Header = () => {
     <header className="header flex justify-between align-center w-full max-w-7xl mx-auto p-4">
       <div className="container flex justify-between align-center w-full">
         <div className="logo">
-          <h1>Collab Todo App</h1>
+          <h1>
+            <a href="/">Collab Todo App</a>
+          </h1>
         </div>
 
         <nav className="navigation flex justify-between align-center">
           <ul className="flex">
-            <li className="mx-2">Kanban Board</li>
-            <li className="mx-2">Action Logs</li>
+            <li className="mx-2">
+              <a href="/kanbanboard">Kanban Board</a>
+            </li>
+            <li className="mx-2">
+              <a href="/actionlog">Action Logs</a>
+            </li>
           </ul>
         </nav>
 
@@ -21,9 +27,15 @@ const Header = () => {
             <span className="username">Rashid Khan</span>
           </div> */}
           <div className="user-info flex items-center gap-2">
-            <button className="button">Register</button>
-            <button className="button">Login</button>
-            <button className="button">Logout</button>
+            <a className="button" href="/register">
+              Register
+            </a>
+            <a className="button" href="/login">
+              Login
+            </a>
+            <a className="button" href="/logout">
+              Logout
+            </a>
           </div>
         </div>
       </div>

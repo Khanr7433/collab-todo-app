@@ -1,13 +1,14 @@
 import React from "react";
+import { RouterProvider } from "react-router-dom";
+import AppRoutes from "./routes/Routes.jsx";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Collaborative To-Do App</h1>
-      <div className="task-list">
-        <p className="text-gray-600">Tasks will be displayed here...</p>
-      </div>
-    </div>
+    <>
+      <RouterProvider router={AppRoutes} />
+      <Toaster position="top-right" reverseOrder={false} />
+    </>
   );
 };
 
