@@ -84,7 +84,7 @@ A modern, real-time collaborative task management application built with the MER
 Create a `.env` file in the `backend` directory:
 
 ```env
-PORT=5000
+PORT=3000
 MONGODB_URI=mongodb://localhost:27017/collab-todo-app
 JWT_SECRET=your_super_secret_jwt_key_here
 NODE_ENV=development
@@ -239,6 +239,7 @@ collab-todo-app/
 │   └── vite.config.js                    # Vite configuration
 │
 ├── .gitignore                            # Root git ignore
+├── Logic_Document.md                     # Logic Document
 └── README.md                             # Project documentation
 ```
 
