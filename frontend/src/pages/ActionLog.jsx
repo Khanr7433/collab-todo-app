@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { getActionLogs } from "../services/actionLogApi";
+import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
 const ActionLog = () => {
+  const { user } = useAuth();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -10,8 +12,15 @@ const ActionLog = () => {
     const fetchLogs = async () => {
       try {
         const response = await getActionLogs();
-        toast.success("Logs fetched successfully!");
-        setLogs(response.data.data.logs || []);
+        // Removed success toast for better UX
+        const fetchedLogs = response.data.data.logs || [];
+        // Sort logs by createdAt in descending order (newest first)
+        const sortedLogs = fetchedLogs.sort((a, b) => {
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateB - dateA;
+        });
+        setLogs(sortedLogs);
       } catch (error) {
         const errorMessage =
           error.response?.data?.message ||
@@ -27,13 +36,28 @@ const ActionLog = () => {
     fetchLogs();
   }, []);
 
+  const isCurrentUser = (userId) => {
+    // Handle the nested user object structure from your auth response
+    const currentUserId = user?.data?.user?._id || user?._id;
+    return currentUserId === userId;
+  };
+
+  const getDisplayName = (userObj) => {
+    if (!userObj) return "Unknown User";
+
+    const name = userObj.fullName || "Unknown User";
+    const isYou = isCurrentUser(userObj._id);
+
+    return isYou ? `${name} (You)` : name;
+  };
+
   const getActionIcon = (action) => {
     switch (action) {
       case "Task Created":
         return (
-          <div className="w-8 h-8 rounded-full border flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full border border-green-400 flex items-center justify-center">
             <svg
-              className="w-4 h-4"
+              className="w-4 h-4 text-green-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -49,9 +73,9 @@ const ActionLog = () => {
         );
       case "Task Updated":
         return (
-          <div className="w-8 h-8 rounded-full border flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full border border-blue-400 flex items-center justify-center">
             <svg
-              className="w-4 h-4"
+              className="w-4 h-4 text-blue-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -67,9 +91,9 @@ const ActionLog = () => {
         );
       case "Task Deleted":
         return (
-          <div className="w-8 h-8 rounded-full border flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full border border-red-400 flex items-center justify-center">
             <svg
-              className="w-4 h-4"
+              className="w-4 h-4 text-red-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -85,9 +109,9 @@ const ActionLog = () => {
         );
       case "Task Status Updated":
         return (
-          <div className="w-8 h-8 rounded-full border flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full border border-purple-400 flex items-center justify-center">
             <svg
-              className="w-4 h-4"
+              className="w-4 h-4 text-purple-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -103,9 +127,9 @@ const ActionLog = () => {
         );
       default:
         return (
-          <div className="w-8 h-8 rounded-full border flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center">
             <svg
-              className="w-4 h-4"
+              className="w-4 h-4 text-gray-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -124,50 +148,79 @@ const ActionLog = () => {
 
   const formatActionText = (log) => {
     const { user, action, task } = log;
-    const userName = user?.fullName || "Unknown User";
+    const userName = getDisplayName(user);
     const taskTitle = task?.title;
+    const isCurrentUserAction = isCurrentUser(user?._id);
 
     switch (action) {
       case "Task Created":
         return (
           <span>
-            <span className="font-medium">{userName}</span> created task{" "}
+            <span
+              className={`font-medium ${
+                isCurrentUserAction ? "text-green-400" : "text-white"
+              }`}
+            >
+              {userName}
+            </span>{" "}
+            created task{" "}
             {taskTitle ? (
-              <span className="font-medium hover:text-blue-600 transition-all">
+              <span className="font-medium text-green-400 hover:text-green-300 transition-all">
                 "{taskTitle}"
               </span>
             ) : (
-              <span className="font-medium">(Task deleted)</span>
+              <span className="font-medium text-gray-400">(Task deleted)</span>
             )}
           </span>
         );
       case "Task Updated":
         return (
           <span>
-            <span className="font-medium">{userName}</span> updated task{" "}
+            <span
+              className={`font-medium ${
+                isCurrentUserAction ? "text-blue-400" : "text-white"
+              }`}
+            >
+              {userName}
+            </span>{" "}
+            updated task{" "}
             {taskTitle ? (
-              <span className="font-medium hover:text-blue-600 transition-all">
+              <span className="font-medium text-blue-400 hover:text-blue-300 transition-all">
                 "{taskTitle}"
               </span>
             ) : (
-              <span className="font-medium">(Task deleted)</span>
+              <span className="font-medium text-gray-400">(Task deleted)</span>
             )}
           </span>
         );
       case "Task Deleted":
         return (
           <span>
-            <span className="font-medium">{userName}</span> deleted a task
+            <span
+              className={`font-medium ${
+                isCurrentUserAction ? "text-red-400" : "text-white"
+              }`}
+            >
+              {userName}
+            </span>{" "}
+            <span className="text-red-400 font-medium">deleted a task</span>
           </span>
         );
       case "Task Status Updated":
         return (
           <span>
-            <span className="font-medium">{userName}</span> updated task status{" "}
+            <span
+              className={`font-medium ${
+                isCurrentUserAction ? "text-purple-400" : "text-white"
+              }`}
+            >
+              {userName}
+            </span>{" "}
+            updated task status{" "}
             {taskTitle ? (
               <span>
                 for{" "}
-                <span className="font-medium hover:text-blue-600 transition-all">
+                <span className="font-medium text-purple-400 hover:text-purple-300 transition-all">
                   "{taskTitle}"
                 </span>
               </span>
@@ -177,12 +230,18 @@ const ActionLog = () => {
       default:
         return (
           <span>
-            <span className="font-medium">{userName}</span> performed{" "}
-            {action.toLowerCase()}{" "}
+            <span
+              className={`font-medium ${
+                isCurrentUserAction ? "text-blue-400" : "text-white"
+              }`}
+            >
+              {userName}
+            </span>{" "}
+            performed {action.toLowerCase()}{" "}
             {taskTitle ? (
               <span>
                 on{" "}
-                <span className="font-medium hover:text-blue-600 transition-all">
+                <span className="font-medium text-blue-400 hover:text-blue-300 transition-all">
                   "{taskTitle}"
                 </span>
               </span>
@@ -192,37 +251,66 @@ const ActionLog = () => {
     }
   };
 
+  const getActionBadgeColor = (action) => {
+    switch (action) {
+      case "Task Created":
+        return "text-green-400 border-green-400";
+      case "Task Updated":
+        return "text-blue-400 border-blue-400";
+      case "Task Deleted":
+        return "text-red-400 border-red-400";
+      case "Task Status Updated":
+        return "text-purple-400 border-purple-400";
+      default:
+        return "text-gray-300 border-gray-400";
+    }
+  };
+
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInHours = (now - date) / (1000 * 60 * 60);
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
 
-    if (diffInHours < 1) {
-      const diffInMinutes = Math.floor((now - date) / (1000 * 60));
-      return diffInMinutes <= 1 ? "Just now" : `${diffInMinutes} minutes ago`;
+    if (diffInSeconds < 60) {
+      return diffInSeconds <= 5 ? "Just now" : `${diffInSeconds} seconds ago`;
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
     } else if (diffInHours < 24) {
-      return `${Math.floor(diffInHours)} hours ago`;
+      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+    } else if (diffInDays === 1) {
+      return "Yesterday";
+    } else if (diffInDays < 7) {
+      return `${diffInDays} days ago`;
     } else {
-      return (
-        date.toLocaleDateString() +
-        " at " +
-        date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      );
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     }
   };
 
   if (loading) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="border rounded-lg shadow-md">
-          <div className="px-4 py-5 sm:px-6 border-b">
-            <h3 className="text-lg leading-6 font-medium">Action Log</h3>
-            <p className="mt-1 max-w-2xl text-sm">
+        <div className="border border-gray-600 rounded-lg shadow-md">
+          <div className="px-4 py-5 sm:px-6 border-b border-gray-600">
+            <h3 className="text-lg leading-6 font-medium text-white">
+              Activity Feed
+            </h3>
+            <p className="mt-1 max-w-2xl text-sm text-gray-300">
               Recent activities and changes in your workspace
             </p>
           </div>
           <div className="text-center py-8">
-            <div className="text-sm">Loading activity logs...</div>
+            <div className="text-sm text-gray-300">
+              Loading activity logs...
+            </div>
           </div>
         </div>
       </div>
@@ -231,22 +319,34 @@ const ActionLog = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="border rounded-lg shadow-md overflow-hidden">
-        <div className="px-4 py-5 sm:px-6 border-b">
-          <h3 className="text-lg leading-6 font-medium">Action Log</h3>
-          <p className="mt-1 max-w-2xl text-sm">
-            Recent activities and changes in your workspace
-          </p>
+      <div className="border border-gray-600 rounded-lg shadow-md overflow-hidden">
+        <div className="px-4 py-5 sm:px-6 border-b border-gray-600">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-lg leading-6 font-medium text-white">
+                Activity Feed
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-gray-300">
+                Latest activities and changes in your workspace
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-sm font-medium text-white">
+                {logs.length}
+              </div>
+              <div className="text-xs text-gray-400">Total Activities</div>
+            </div>
+          </div>
         </div>
 
         <div>
           {logs.length > 0 ? (
             <div className="max-h-96 overflow-y-auto">
-              <ul className="divide-y">
+              <ul className="divide-y divide-gray-700">
                 {logs.map((log) => (
                   <li
                     key={log._id}
-                    className="px-4 py-4 sm:px-6 hover:border-l-4 hover:border-l-blue-600 transition-all"
+                    className="px-4 py-4 sm:px-6 hover:bg-gray-800 hover:border-l-4 hover:border-l-blue-400 transition-all"
                   >
                     <div className="flex items-start space-x-3">
                       {/* Action Icon */}
@@ -256,15 +356,21 @@ const ActionLog = () => {
 
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm">{formatActionText(log)}</div>
-                        <div className="mt-1 text-xs">
+                        <div className="text-sm text-gray-200">
+                          {formatActionText(log)}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-400">
                           {formatTimestamp(log.createdAt)}
                         </div>
                       </div>
 
                       {/* Action Badge */}
                       <div className="flex-shrink-0">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getActionBadgeColor(
+                            log.action
+                          )}`}
+                        >
                           {log.action}
                         </span>
                       </div>
@@ -276,7 +382,7 @@ const ActionLog = () => {
           ) : (
             <div className="text-center py-12">
               <svg
-                className="mx-auto h-12 w-12"
+                className="mx-auto h-12 w-12 text-gray-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -285,11 +391,13 @@ const ActionLog = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 712-2h2a2 2 0 712 2"
                 />
               </svg>
-              <h3 className="mt-2 text-sm font-medium">No activity logs</h3>
-              <p className="mt-1 text-sm">
+              <h3 className="mt-2 text-sm font-medium text-white">
+                No activity logs
+              </h3>
+              <p className="mt-1 text-sm text-gray-400">
                 Activity logs will appear here when actions are performed.
               </p>
             </div>

@@ -7,3 +7,90 @@
   background-color: black;
   color: white;
 }
+
+/* Custom Scrollbar Styles */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #6b7280 transparent;
+}
+
+/* For dark theme compatibility */
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #d1d5db;
+  }
+
+  * {
+    scrollbar-color: #9ca3af transparent;
+  }
+}
+
+/* Specific scrollable containers - you can add these classes to specific elements */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #6b7280 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Ultra thin variant */
+.ultra-thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #9ca3af transparent;
+}
+
+.ultra-thin-scrollbar::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+.ultra-thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 1.5px;
+}
+
+.ultra-thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}

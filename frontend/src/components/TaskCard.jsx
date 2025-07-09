@@ -1,6 +1,9 @@
 import React from "react";
+import { useAuth } from "../context/AuthContext";
 
 const TaskCard = ({ task, onClick }) => {
+  const { user } = useAuth();
+
   const getPriorityColor = (priority) => {
     switch (priority?.toLowerCase()) {
       case "high":
@@ -36,9 +39,28 @@ const TaskCard = ({ task, onClick }) => {
     });
   };
 
+  const isCurrentUser = (userId) => {
+    // Handle the nested user object structure from your auth response
+    const currentUserId = user?.data?.user?._id || user?._id;
+    return currentUserId === userId;
+  };
+
+  const getDisplayName = (userObj, isCreator = false) => {
+    if (!userObj) {
+      return isCreator ? "Unknown" : "Unassigned";
+    }
+
+    const name = userObj.fullName || "Unknown";
+    const isYou = isCurrentUser(userObj._id);
+
+    return isYou ? `${name} (You)` : name;
+  };
+
   return (
     <div
-      className={`border-2 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all ${getPriorityColor(task.priority)}`}
+      className={`border-2 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all ${getPriorityColor(
+        task.priority
+      )}`}
       onClick={() => onClick(task)}
     >
       {/* Header - Title and Priority */}
@@ -49,7 +71,9 @@ const TaskCard = ({ task, onClick }) => {
             : "Untitled Task"}
         </h4>
         <span
-          className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium flex-shrink-0 ${getPriorityBadgeColor(task.priority)}`}
+          className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium flex-shrink-0 ${getPriorityBadgeColor(
+            task.priority
+          )}`}
         >
           {task.priority
             ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1)
@@ -78,16 +102,28 @@ const TaskCard = ({ task, onClick }) => {
       <div className="space-y-1">
         <div className="flex items-center justify-start text-xs">
           <span className="text-gray-500">By:</span>
-          <span className="font-medium text-gray-700 truncate ml-2">
-            {task.createdBy?.fullName || "Unknown"}
+          <span
+            className={`font-medium truncate ml-2 ${
+              isCurrentUser(task.createdBy?._id)
+                ? "text-green-700 font-semibold"
+                : "text-gray-700"
+            }`}
+          >
+            {getDisplayName(task.createdBy, true)}
           </span>
         </div>
         <div className="flex items-center justify-start text-xs">
           <span className="text-gray-500">To:</span>
           <span
-            className={`font-medium truncate ml-2 ${task.assignedTo ? "text-blue-600" : "text-gray-400"}`}
+            className={`font-medium truncate ml-2 ${
+              task.assignedTo
+                ? isCurrentUser(task.assignedTo._id)
+                  ? "text-blue-700 font-semibold"
+                  : "text-blue-600"
+                : "text-gray-400"
+            }`}
           >
-            {task.assignedTo?.fullName || "Unassigned"}
+            {getDisplayName(task.assignedTo, false)}
           </span>
         </div>
       </div>
