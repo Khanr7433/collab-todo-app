@@ -1,7 +1,7 @@
 import React from "react";
 import { updateTask } from "../services/taskApi";
 import { io } from "socket.io-client";
-const socket = io(import.meta.env.VITE_API_URL);
+const socket = io(import.meta.env.VITE_WEBSOCKET_URL);
 
 const ConflictResolver = ({ conflict, onClose }) => {
   const { clientTask, serverTask } = conflict;

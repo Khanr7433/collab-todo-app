@@ -24,23 +24,20 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          {user && (
-            <nav className="hidden md:flex space-x-8">
-              <Link
-                to="/kanbanboard"
-                className="hover:text-blue-600 transition-all"
-              >
-                Kanban Board
-              </Link>
-              <Link
-                to="/actionlog"
-                className="hover:text-blue-600 transition-all"
-              >
-                Action Logs
-              </Link>
-            </nav>
-          )}
+          <nav className="hidden md:flex space-x-8">
+            <Link
+              to="/kanbanboard"
+              className="hover:text-blue-600 transition-all"
+            >
+              Kanban Board
+            </Link>
+            <Link
+              to="/actionlog"
+              className="hover:text-blue-600 transition-all"
+            >
+              Action Logs
+            </Link>
+          </nav>
 
           {/* Desktop User Section */}
           <div className="hidden md:flex items-center space-x-4">
@@ -140,6 +137,20 @@ const Header = () => {
               )}
               {!user && (
                 <>
+                  <Link
+                    to="/kanbanboard"
+                    className="block px-3 py-2 rounded hover:text-blue-600 transition-all"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Kanban Board
+                  </Link>
+                  <Link
+                    to="/actionlog"
+                    className="block px-3 py-2 rounded hover:text-blue-600 transition-all"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Action Logs
+                  </Link>
                   <Link
                     to="/register"
                     className="block px-3 py-2 border rounded hover:text-blue-600 hover:border-blue-600 transition-all mb-2"

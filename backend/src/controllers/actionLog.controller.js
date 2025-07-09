@@ -5,7 +5,7 @@ import ApiError from "../utils/apiError.js";
 
 const getLogs = asyncHandler(async (req, res) => {
   const logs = await ActionLog.find()
-    .sort({ timestamp: -1 })
+    .sort({ createdAt: -1 })
     .limit(20)
     .populate("user", "fullName")
     .populate("task", "title");
