@@ -53,6 +53,21 @@ const KanbanBoard = () => {
     return getTasksForStatus(status).length;
   };
 
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await deleteTask(taskId);
+      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
+      toast.success("Task deleted successfully");
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to delete task. Please try again.";
+      toast.error(errorMessage);
+    }
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -80,18 +95,14 @@ const KanbanBoard = () => {
         </button>
       </div>
 
-      {/* Changed from grid to flex to allow independent column heights */}
-      <div className="flex flex-col md:flex-row gap-4 mb-8 items-start">
+      {/* Fixed the mobile layout issue */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {statuses.map((status) => {
           const statusTasks = getTasksForStatus(status);
           const taskCount = statusTasks.length;
 
           return (
-            <div
-              key={status}
-              className="flex-1 border rounded-lg p-4 shadow-md"
-            >
-              {/* Column Header */}
+            <div key={status} className="border rounded-lg p-4 shadow-md">
               <div className="flex justify-between items-center mb-4 pb-3 border-b">
                 <h3 className="text-lg font-semibold">
                   {status
@@ -103,14 +114,14 @@ const KanbanBoard = () => {
                 </span>
               </div>
 
-              {/* Tasks Container */}
-              <div className="space-y-3">
+              <div className="space-y-3 custom-scrollbar max-h-96 overflow-y-auto">
                 {taskCount > 0 ? (
                   statusTasks.map((task) => (
                     <TaskCard
                       key={task._id}
                       task={task}
                       onClick={setSelectedTask}
+                      onDelete={handleDeleteTask}
                     />
                   ))
                 ) : (
