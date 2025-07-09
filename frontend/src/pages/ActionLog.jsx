@@ -12,9 +12,9 @@ const ActionLog = () => {
     const fetchLogs = async () => {
       try {
         const response = await getActionLogs();
-        // Removed success toast for better UX
+
         const fetchedLogs = response.data.data.logs || [];
-        // Sort logs by createdAt in descending order (newest first)
+
         const sortedLogs = fetchedLogs.sort((a, b) => {
           const dateA = new Date(a.createdAt).getTime();
           const dateB = new Date(b.createdAt).getTime();
@@ -37,7 +37,6 @@ const ActionLog = () => {
   }, []);
 
   const isCurrentUser = (userId) => {
-    // Handle the nested user object structure from your auth response
     const currentUserId = user?.data?.user?._id || user?._id;
     return currentUserId === userId;
   };

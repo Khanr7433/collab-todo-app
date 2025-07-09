@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
-const TaskCard = ({ task, onClick, onDelete }) => {
+const TaskCard = ({ task, onClick, onDelete, isDragging }) => {
   const { user } = useAuth();
 
   const getPriorityColor = (priority) => {
@@ -76,7 +76,7 @@ const TaskCard = ({ task, onClick, onDelete }) => {
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"
               />
             </svg>
-            <span className="font-medium ">Delete Task</span>
+            <span className="font-medium">Delete Task</span>
           </div>
           <p className="text-sm text-gray-600 mb-4">
             Are you sure you want to delete "{task.title}"? This action cannot
@@ -111,15 +111,22 @@ const TaskCard = ({ task, onClick, onDelete }) => {
     );
   };
 
-  const handleCardClick = () => {
+  const handleCardClick = (e) => {
+    // Prevent click when dragging
+    if (isDragging) {
+      e.preventDefault();
+      return;
+    }
     onClick(task);
   };
 
   return (
     <div
-      className={`border-2 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all ${getPriorityColor(
-        task.priority
-      )}`}
+      className={`border-2 rounded-lg p-3 transition-all select-none ${
+        isDragging
+          ? "opacity-50 transform rotate-1 scale-95 cursor-grabbing"
+          : "cursor-grab hover:cursor-grab hover:shadow-md"
+      } ${getPriorityColor(task.priority)}`}
       onClick={handleCardClick}
     >
       {/* Header - Title and Priority */}
