@@ -1,6 +1,6 @@
 # Collaborative Todo App
 
-A modern, real-time collaborative task management application built with the MERN stack. Teams can manage tasks together with live updates, user assignments, and comprehensive activity tracking.
+A modern, real-time collaborative task management application built with the MERN stack. Teams can manage tasks together with live updates, user assignments, drag & drop functionality, and comprehensive activity tracking.
 
 ## ✨ Features
 
@@ -10,19 +10,30 @@ A modern, real-time collaborative task management application built with the MER
 - **User Authentication** - Secure JWT-based authentication with registration and login
 - **Task Management** - Create, edit, delete, and organize tasks with full CRUD operations
 - **User Assignment** - Assign tasks to team members with smart assignment feature
-- **Status Tracking** - Todo, In Progress, and Done columns with drag-and-drop functionality
+- **Drag & Drop Interface** - Intuitive drag and drop functionality to move tasks between columns
+- **Status Tracking** - Todo, In Progress, and Done columns with visual status management
 - **Priority Levels** - High, Medium, and Low priority tasks with color coding
-- **Activity Logging** - Comprehensive audit trail of all task activities with timestamps
+- **Activity Logging** - Comprehensive audit trail of all task activities with real-time updates
 
 ### User Experience
 
-- **Kanban Board** - Intuitive card-based interface with responsive grid layout
+- **Kanban Board** - Intuitive card-based interface with drag & drop functionality
 - **Responsive Design** - Mobile-first design that works seamlessly on all devices
-- **Dark Theme** - Modern dark UI with excellent contrast and custom styling
+- **Modern UI** - Clean interface with light theme and excellent visual hierarchy
 - **Real-time Notifications** - Beautiful toast notifications for all user actions
+- **Interactive Task Cards** - Rich task cards with user information and priority indicators
 - **Conflict Resolution** - Smart handling of concurrent edits with user confirmation
-- **Custom Scrollbars** - Thin, styled scrollbars throughout the application
+- **Custom Scrollbars** - Styled scrollbars throughout the application
 - **User Identification** - Shows "(You)" for current user's tasks and activities
+- **Smart Delete Confirmation** - Interactive toast confirmations for safe task deletion
+
+### Advanced Features
+
+- **Socket.io Real-time Events** - Dedicated events for task creation, updates, moves, and deletions
+- **Optimistic Updates** - Immediate UI feedback with error rollback capability
+- **Network Exposure** - Development server can be accessed from network devices
+- **Touch Support** - Mobile-friendly drag and drop with touch events
+- **Visual Feedback** - Drag states, hover effects, and drop zone highlighting
 
 ## 🛠 Tech Stack
 
@@ -30,11 +41,11 @@ A modern, real-time collaborative task management application built with the MER
 
 - **React 18** - Modern React with hooks and functional components
 - **React Router v6** - Client-side routing with protected routes
-- **Tailwind CSS** - Utility-first CSS framework with custom dark theme
+- **Tailwind CSS** - Utility-first CSS framework with custom light theme
 - **React Hot Toast** - Beautiful toast notifications with custom styling
 - **Socket.io Client** - Real-time bidirectional communication
-- **Axios** - HTTP client for API calls with error handling
-- **Vite** - Fast build tool and development server
+- **Axios** - HTTP client for API calls with interceptors and error handling
+- **Vite** - Fast build tool and development server with network exposure
 
 ### Backend
 
@@ -44,7 +55,7 @@ A modern, real-time collaborative task management application built with the MER
 - **Socket.io** - Real-time bidirectional event-based communication
 - **JWT (jsonwebtoken)** - JSON Web Tokens for authentication
 - **bcryptjs** - Password hashing and verification
-- **CORS** - Cross-origin resource sharing configuration
+- **CORS** - Cross-origin resource sharing with multiple origin support
 - **Cookie Parser** - Parse cookies for session management
 
 ## 🚀 Getting Started
@@ -86,7 +97,10 @@ Create a `.env` file in the `backend` directory:
 ```env
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/collab-todo-app
+# For MongoDB Atlas:
+# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/collab-todo-app
 JWT_SECRET=your_super_secret_jwt_key_here
+JWT_EXPIRES_IN=30d
 NODE_ENV=development
 CORS_ORIGIN=http://localhost:5173
 ```
@@ -98,6 +112,9 @@ Create a `.env` file in the `frontend` directory:
 ```env
 VITE_API_URL=http://localhost:3000/api
 VITE_WEBSOCKET_URL=http://localhost:3000
+# For network access:
+# VITE_API_URL=http://192.168.1.100:3000/api
+# VITE_WEBSOCKET_URL=http://192.168.1.100:3000
 ```
 
 ### Running the Application
@@ -114,11 +131,22 @@ VITE_WEBSOCKET_URL=http://localhost:3000
    Backend will run on `http://localhost:3000`
 
 2. **Start the Frontend Development Server**
+
    ```bash
    cd frontend
    npm run dev
    ```
+
    Frontend will run on `http://localhost:5173`
+
+3. **For Network Access (Optional)**
+
+   ```bash
+   cd frontend
+   npm run dev -- --host
+   ```
+
+   This will expose the frontend on your local network
 
 #### Production Mode
 
@@ -141,8 +169,8 @@ VITE_WEBSOCKET_URL=http://localhost:3000
 collab-todo-app/
 ├── backend/
 │   ├── src/
-│   │   ├── app.js                        # Express app configuration
-│   │   ├── index.js                      # Server entry point
+│   │   ├── app.js                        # Express app configuration with CORS
+│   │   ├── index.js                      # Server entry point with Socket.io
 │   │   ├── constants.js                  # App constants and configurations
 │   │   │
 │   │   ├── controllers/
@@ -196,7 +224,7 @@ collab-todo-app/
 │   │   │   ├── index.js                  # Component exports
 │   │   │   ├── Header.jsx                # Navigation header with auth status
 │   │   │   ├── Footer.jsx                # Application footer
-│   │   │   ├── TaskCard.jsx              # Individual task display with delete
+│   │   │   ├── TaskCard.jsx              # Rich task cards with drag support
 │   │   │   ├── ConflictResolver.jsx      # Conflict resolution modal
 │   │   │   └── ProtectedRoute.jsx        # Route protection component
 │   │   │
@@ -207,7 +235,7 @@ collab-todo-app/
 │   │   │   └── useSocket.js              # Socket.io custom hook for real-time updates
 │   │   │
 │   │   ├── modal/
-│   │   │   └── TaskModal.jsx             # Task creation/editing modal
+│   │   │   └── TaskModal.jsx             # Task creation/editing modal with Socket.io
 │   │   │
 │   │   ├── pages/
 │   │   │   ├── index.js                  # Page component exports
@@ -215,8 +243,8 @@ collab-todo-app/
 │   │   │   ├── Register.jsx              # User registration page
 │   │   │   ├── Login.jsx                 # User login page
 │   │   │   ├── Logout.jsx                # Logout functionality
-│   │   │   ├── KanbanBoard.jsx           # Main kanban board with task management
-│   │   │   └── ActionLog.jsx             # Activity log page with user identification
+│   │   │   ├── KanbanBoard.jsx           # Main kanban board with drag & drop
+│   │   │   └── ActionLog.jsx             # Real-time activity log page
 │   │   │
 │   │   ├── routes/
 │   │   │   ├── Routes.jsx                # Route definitions with protection
@@ -225,7 +253,9 @@ collab-todo-app/
 │   │   └── services/
 │   │       ├── authApi.js                # Authentication API calls
 │   │       ├── taskApi.js                # Task management API calls
-│   │       └── actionLogApi.js           # Activity log API calls
+│   │       ├── actionLogApi.js           # Activity log API calls
+│   │       └── socketService.js          # Centralized Socket.io service
+│   │
 │   │
 │   ├── .env                              # Frontend environment variables
 │   ├── .gitignore                        # Git ignore rules
@@ -256,7 +286,7 @@ collab-todo-app/
 - `GET /gettask` - Get all tasks with user population
 - `POST /createtask` - Create new task with activity logging
 - `PATCH /updatetask/:id` - Update task details
-- `PATCH /updatetaskstatus/:id` - Update task status (Todo, in-progress, completed)
+- `PATCH /updatetaskstatus/:id` - Update task status via drag & drop
 - `DELETE /deletetask/:id` - Delete task with activity logging
 - `POST /assigntask/:id` - Smart assign task to available user
 
@@ -275,15 +305,24 @@ collab-todo-app/
 
 1. **Create Tasks** - Click "Add Task" button to open the task creation modal
 2. **Edit Tasks** - Click on any task card to edit title, description, status, or priority
-3. **Delete Tasks** - Use the delete button on task cards with custom confirmation toast
-4. **Smart Assignment** - Use the "Smart Assign" button in edit mode to automatically assign tasks
-5. **Status Updates** - Tasks are organized in Todo, In Progress, and Done columns
+3. **Move Tasks** - Drag and drop tasks between Todo, In Progress, and Done columns
+4. **Delete Tasks** - Use the delete button on task cards with interactive confirmation
+5. **Smart Assignment** - Use the "Smart Assign" button in edit mode to automatically assign tasks
+6. **Priority Management** - Set High, Medium, or Low priority with visual color coding
+
+### Drag & Drop Features
+
+1. **Visual Feedback** - Tasks become semi-transparent when dragging
+2. **Drop Zones** - Columns highlight with blue borders when hovering with a task
+3. **Instant Updates** - Changes are immediately visible to all connected users
+4. **Error Handling** - Failed moves are automatically reverted with error messages
 
 ### Real-time Features
 
 - **Live Updates** - See real-time updates when other users modify tasks
 - **Activity Tracking** - Monitor all team activities in the Activity Log page
 - **User Identification** - See "(You)" indicator for your own tasks and activities
+- **Socket Notifications** - Get notified when teammates make changes
 
 ## 🔄 Real-time Features
 
@@ -293,13 +332,15 @@ The application uses Socket.io for comprehensive real-time functionality:
 
 - **taskCreated** - Broadcast when new tasks are created
 - **taskUpdated** - Broadcast when tasks are modified
+- **taskMoved** - Broadcast when tasks are moved via drag & drop
 - **taskDeleted** - Broadcast when tasks are removed
-- **statusChanged** - Broadcast when task status changes
+- **newActivityLog** - Broadcast new activity entries
 
 ### Live Updates
 
 - **Task Synchronization** - All connected clients receive instant updates
-- **Activity Notifications** - Real-time activity log updates
+- **Drag & Drop Sync** - Real-time task movement across all users
+- **Activity Notifications** - Real-time activity log updates with toast notifications
 - **Conflict Resolution** - Handle concurrent edits with user confirmation
 - **User Status** - Visual indicators for current user's content
 
@@ -307,14 +348,15 @@ The application uses Socket.io for comprehensive real-time functionality:
 
 ### Design System
 
-- **Dark Theme** - Consistent dark color scheme with proper contrast ratios
+- **Light Theme** - Clean, modern light color scheme with excellent contrast
 - **Responsive Grid** - Mobile-first design with CSS Grid layout
 - **Custom Components** - Reusable components with consistent styling
-- **Typography** - Inter font family for optimal readability
+- **Typography** - Optimized font hierarchy for readability
 
 ### Interactive Elements
 
-- **Toast Notifications** - Custom styled notifications for all user actions
+- **Drag & Drop Interface** - Smooth, intuitive task movement with visual feedback
+- **Toast Notifications** - Rich notifications with custom actions and confirmations
 - **Loading States** - Smooth loading indicators for better user experience
 - **Hover Effects** - Subtle animations and transitions throughout the app
 - **Form Validation** - Client-side validation with helpful error messages
@@ -325,13 +367,14 @@ The application uses Socket.io for comprehensive real-time functionality:
 - **Screen Reader** - Proper ARIA labels and semantic HTML
 - **Color Contrast** - WCAG compliant color combinations
 - **Focus Management** - Clear focus indicators for interactive elements
+- **Touch Support** - Mobile-friendly interactions with touch events
 
 ## 🔧 Configuration Files
 
 ### Frontend Configuration
 
-- **vite.config.js** - Vite build tool configuration with Tailwind plugin
-- **tailwind.config.js** - Tailwind CSS customization and theme configuration
+- **vite.config.js** - Vite build tool configuration with host support for network access
+- **tailwind.config.js** - Tailwind CSS customization with light theme
 - **eslint.config.js** - ESLint rules for code quality
 - **postcss.config.js** - PostCSS configuration for CSS processing
 
@@ -347,7 +390,7 @@ The application uses Socket.io for comprehensive real-time functionality:
 ```bash
 cd frontend
 npm run build
-# Deploy dist/ folder to your hosting service
+# Deploy dist/ folder to your hosting service (Vercel, Netlify, etc.)
 ```
 
 ### Backend Deployment
@@ -355,7 +398,7 @@ npm run build
 ```bash
 cd backend
 npm start
-# Configure environment variables on your hosting platform
+# Configure environment variables on your hosting platform (Heroku, Railway, etc.)
 ```
 
 ### Environment Setup
@@ -363,6 +406,38 @@ npm start
 - Set `NODE_ENV=production` for production builds
 - Configure MongoDB connection string for production database
 - Update CORS_ORIGIN to match your frontend domain
+- Set JWT_SECRET to a secure random string in production
+
+### Network Access Setup
+
+For development across multiple devices:
+
+1. **Frontend**: Use `npm run dev -- --host` to expose on network
+2. **Backend**: Update CORS_ORIGIN to include your network IP
+3. **Environment**: Update VITE_API_URL and VITE_WEBSOCKET_URL for network access
+
+## 🔥 Key Features Highlights
+
+### Advanced Drag & Drop
+
+- **HTML5 Drag API** - Native browser drag and drop support
+- **Visual Feedback** - Real-time visual cues during drag operations
+- **Touch Support** - Mobile-friendly drag and drop
+- **Error Recovery** - Automatic rollback on failed operations
+
+### Real-time Collaboration
+
+- **Socket.io Integration** - Dedicated events for all task operations
+- **Optimistic Updates** - Immediate UI response with server sync
+- **Conflict Resolution** - Smart handling of concurrent edits
+- **Activity Tracking** - Comprehensive audit trail with real-time updates
+
+### Modern Architecture
+
+- **Component-based Design** - Reusable, maintainable React components
+- **Custom Hooks** - Specialized hooks for Socket.io and authentication
+- **Service Layer** - Centralized API and Socket service management
+- **Error Boundaries** - Graceful error handling throughout the application
 
 ## 🤝 Contributing
 
@@ -376,8 +451,9 @@ npm start
 
 - Follow the existing code style and patterns
 - Add comments for complex logic
-- Test thoroughly before submitting PR
+- Test drag & drop functionality thoroughly
 - Update documentation if needed
+- Test real-time features with multiple browser tabs
 
 ## 👨‍💻 Author
 
@@ -393,6 +469,7 @@ npm start
 - **Socket.io** - For seamless real-time communication
 - **Tailwind CSS** - For the utility-first CSS framework
 - **Vite** - For the fast build tool and development experience
+- **HTML5 Drag & Drop API** - For native browser drag and drop support
 
 ## 🐛 Known Issues
 
@@ -400,7 +477,7 @@ npm start
 
 ## 🔮 Future Enhancements
 
-- [ ] Drag and drop functionality for task status changes
+- [x] ~~Drag and drop functionality for task status changes~~ ✅ **Completed**
 - [ ] File attachments for tasks
 - [ ] Task comments and discussions
 - [ ] Team management and permissions
@@ -408,3 +485,10 @@ npm start
 - [ ] Mobile app development
 - [ ] Advanced filtering and search
 - [ ] Task templates and recurring tasks
+- [ ] Keyboard shortcuts for power users
+- [ ] Dark/Light theme toggle
+- [ ] Task time tracking
+- [ ] Gantt chart view
+- [ ] Task dependencies
+- [ ] Bulk operations
+- [ ] Export functionality

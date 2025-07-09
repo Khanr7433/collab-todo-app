@@ -61,7 +61,6 @@ const KanbanBoard = () => {
       await deleteTask(taskId);
       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
 
-      // Emit socket event for task deletion
       socket.emit("taskDeleted", { _id: taskId });
 
       toast.success("Task deleted successfully");
@@ -75,14 +74,11 @@ const KanbanBoard = () => {
     }
   };
 
-  // Drag and Drop Handlers
   const handleDragStart = (e, task) => {
-    console.log("Drag started for task:", task.title); // Debug log
     setDraggedTask(task);
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("application/json", JSON.stringify(task));
 
-    // Add visual feedback with a slight delay to ensure it applies
     setTimeout(() => {
       if (e.target) {
         e.target.style.opacity = "0.5";
@@ -108,13 +104,12 @@ const KanbanBoard = () => {
   const handleDragEnter = (e, status) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Drag enter:", status); // Debug log
     setDragOverColumn(status);
   };
 
   const handleDragLeave = (e) => {
     e.preventDefault();
-    // Only clear drag over if we're actually leaving the column
+
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX;
     const y = e.clientY;
@@ -127,42 +122,32 @@ const KanbanBoard = () => {
   const handleDrop = async (e, newStatus) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Drop event triggered for status:", newStatus); // Debug log
 
     setDragOverColumn(null);
 
     if (!draggedTask) {
-      console.log("No dragged task found"); // Debug log
       return;
     }
 
     if (draggedTask.status === newStatus) {
-      console.log("Same status, no update needed"); // Debug log
       setDraggedTask(null);
       return;
     }
 
     const originalStatus = draggedTask.status;
-    console.log(`Moving task from ${originalStatus} to ${newStatus}`); // Debug log
 
     try {
-      // Optimistic update
       const updatedTask = { ...draggedTask, status: newStatus };
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task._id === draggedTask._id ? updatedTask : task
         )
       );
-      console.log("Optimistic update applied:", updatedTask); // Debug log
 
-      // API call to update task status
       const response = await updateTaskStatus(draggedTask._id, {
         status: newStatus,
       });
 
-      console.log("Task status updated successfully:", response.data); // Debug log
-
-      // Emit taskMoved socket event for drag & drop operations
       socket.emit("taskMoved", {
         data: {
           task: response.data.data.task || updatedTask,
@@ -172,7 +157,6 @@ const KanbanBoard = () => {
         },
       });
 
-      // Also emit general taskUpdated event for compatibility
       socket.emit("taskUpdated", {
         data: {
           task: response.data.data.task || updatedTask,
@@ -183,9 +167,6 @@ const KanbanBoard = () => {
         `Task moved to ${newStatus === "in-progress" ? "In Progress" : newStatus}`
       );
     } catch (error) {
-      console.error("Error updating task status:", error); // Debug log
-
-      // Revert optimistic update on error
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task._id === draggedTask._id
