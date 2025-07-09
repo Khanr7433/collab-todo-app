@@ -2,6 +2,12 @@
 
 A modern, real-time collaborative task management application built with the MERN stack. Teams can manage tasks together with live updates, user assignments, drag & drop functionality, and comprehensive activity tracking.
 
+## 🌐 Live Demo
+
+**🚀 [Try the Live Application](https://collab-todo-app.vercel.app/)**
+
+Experience the full functionality including real-time collaboration, drag & drop task management, and live activity tracking.
+
 ## ✨ Features
 
 ### Core Functionality
@@ -60,13 +66,23 @@ A modern, real-time collaborative task management application built with the MER
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Quick Start (Try Online)
+
+1. **Visit the Live Demo**: [https://collab-todo-app.vercel.app/](https://collab-todo-app.vercel.app/)
+2. **Register a New Account** or use demo credentials
+3. **Start Creating Tasks** and experience real-time collaboration
+4. **Test Drag & Drop** by moving tasks between columns
+5. **Open Multiple Tabs** to see real-time updates in action
+
+### Local Development
+
+#### Prerequisites
 
 - **Node.js** (v16 or higher)
 - **npm** or **yarn**
 - **MongoDB** (local installation or MongoDB Atlas)
 
-### Installation
+#### Installation
 
 1. **Clone the repository**
 
@@ -385,23 +401,27 @@ The application uses Socket.io for comprehensive real-time functionality:
 
 ## 🚀 Deployment
 
-### Frontend Deployment
+### Live Application
+
+The application is currently deployed and accessible at:
+**[https://collab-todo-app.vercel.app/](https://collab-todo-app.vercel.app/)**
+
+### Frontend Deployment (Vercel)
 
 ```bash
 cd frontend
 npm run build
-# Deploy dist/ folder to your hosting service (Vercel, Netlify, etc.)
+# Deploy to Vercel automatically via GitHub integration
 ```
 
-### Backend Deployment
+### Backend Deployment (Vercel)
 
 ```bash
 cd backend
-npm start
-# Configure environment variables on your hosting platform (Heroku, Railway, etc.)
+# Configure vercel.json and deploy via Vercel CLI or GitHub integration
 ```
 
-### Environment Setup
+### Environment Setup for Production
 
 - Set `NODE_ENV=production` for production builds
 - Configure MongoDB connection string for production database
@@ -461,6 +481,7 @@ For development across multiple devices:
 
 - GitHub: [@Khanr7433](https://github.com/Khanr7433)
 - Email: [khan.rashid.7433@gmail.com](mailto:khan.rashid.7433@gmail.com)
+- Live Demo: [https://collab-todo-app.vercel.app/](https://collab-todo-app.vercel.app/)
 
 ## 🙏 Acknowledgments
 
@@ -470,6 +491,7 @@ For development across multiple devices:
 - **Tailwind CSS** - For the utility-first CSS framework
 - **Vite** - For the fast build tool and development experience
 - **HTML5 Drag & Drop API** - For native browser drag and drop support
+- **Vercel** - For seamless deployment and hosting
 
 ## 🐛 Known Issues
 
@@ -478,6 +500,7 @@ For development across multiple devices:
 ## 🔮 Future Enhancements
 
 - [x] ~~Drag and drop functionality for task status changes~~ ✅ **Completed**
+- [x] ~~Production deployment on Vercel~~ ✅ **Completed**
 - [ ] File attachments for tasks
 - [ ] Task comments and discussions
 - [ ] Team management and permissions
