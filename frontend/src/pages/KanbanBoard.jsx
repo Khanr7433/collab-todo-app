@@ -153,6 +153,7 @@ const KanbanBoard = () => {
           task._id === draggedTask._id ? updatedTask : task
         )
       );
+      console.log("Optimistic update applied:", updatedTask); // Debug log
 
       // API call to update task status
       const response = await updateTaskStatus(draggedTask._id, {

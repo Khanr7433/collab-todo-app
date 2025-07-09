@@ -158,7 +158,7 @@ const updateTaskStatus = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Task not found");
   }
 
-  const validStatuses = ["Todo", "in-progress", "completed"];
+  const validStatuses = ["Todo", "in-progress", "Done"];
 
   if (!validStatuses.includes(status)) {
     throw new ApiError(400, "Invalid status value");
