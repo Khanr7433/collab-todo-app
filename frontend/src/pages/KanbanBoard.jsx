@@ -11,10 +11,10 @@ import useSocket from "../hooks/useSocket";
 import { useAuth } from "../context/AuthContext";
 import TaskModal from "../modal/TaskModal";
 import { ConflictResolver, TaskCard } from "../components";
-import { io } from "socket.io-client";
 import toast from "react-hot-toast";
 
 const KanbanBoard = () => {
+  const { user } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [conflict, setConflict] = useState(null);
@@ -22,7 +22,7 @@ const KanbanBoard = () => {
   const [draggedTask, setDraggedTask] = useState(null);
   const [dragOverColumn, setDragOverColumn] = useState(null);
 
-  const socket = useSocket(setTasks);
+  const socket = useSocket(setTasks, user);
 
   useEffect(() => {
     const loadTasks = async () => {
