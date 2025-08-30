@@ -139,4 +139,79 @@ const assignTaskToProject = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { task: populatedTask }, "Task assigned to project successfully"));
 });
 
-export { createProject, getProjects, assignTaskToProject };
+const updateProject = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { name, description, status, members } = req.body;
+
+  if (!id) {
+    throw new ApiError(400, "Project ID is required");
+  }
+
+  if (!name && !description && !status && !members) {
+    throw new ApiError(400, "At least one field is required for update");
+  }
+
+  const project = await Project.findById(id);
+
+  if (!project) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  // Check if user has permission to update project
+  const userId = req.user._id;
+  const isOwner = project.owner.toString() === userId.toString();
+
+  if (!isOwner) {
+    throw new ApiError(403, "Only project owner can update the project");
+  }
+
+  if (name) {
+    const existingProject = await Project.findOne({ name, _id: { $ne: id } });
+    if (existingProject) {
+      throw new ApiError(400, "Project with this name already exists");
+    }
+    project.name = name;
+  }
+
+  if (description !== undefined) {
+    project.description = description;
+  }
+
+  if (status) {
+    const validStatuses = ["active", "completed", "archived"];
+    if (!validStatuses.includes(status)) {
+      throw new ApiError(400, "Invalid status value");
+    }
+    project.status = status;
+  }
+
+  if (members) {
+    project.members = members;
+  }
+
+  const updatedProject = await project.save();
+
+  if (!updatedProject) {
+    throw new ApiError(500, "Something went wrong while updating project");
+  }
+
+  const populatedProject = await Project.findById(id)
+    .populate("owner", "fullName email")
+    .populate("members", "fullName email");
+
+  const actionLog = await ActionLog.create({
+    action: "Project Updated",
+    user: userId,
+    project: id,
+  });
+
+  if (!actionLog) {
+    throw new ApiError(500, "Failed to create action log for project update");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { project: populatedProject }, "Project updated successfully"));
+});
+
+export { createProject, getProjects, assignTaskToProject, updateProject };
