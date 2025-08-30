@@ -11,6 +11,7 @@ import {
   KanbanBoard,
   ActionLog,
   Logout,
+  Projects,
 } from "../pages";
 import Layout from "../layout";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -43,6 +44,14 @@ const AppRoutes = createBrowserRouter(
         element={
           <ProtectedRoutes>
             <ActionLog />
+          </ProtectedRoutes>
+        }
+      />
+      <Route
+        path="/projects"
+        element={
+          <ProtectedRoutes>
+            <Projects />
           </ProtectedRoutes>
         }
       />
