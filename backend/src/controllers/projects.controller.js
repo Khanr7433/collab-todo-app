@@ -58,4 +58,28 @@ const createProject = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, { project: createdProject }, "Project created successfully"));
 });
 
-export { createProject };
+const getProjects = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  if (!userId) {
+    throw new ApiError(400, "User not authenticated");
+  }
+
+  const projects = await Project.find({
+    $or: [{ owner: userId }, { members: userId }]
+  })
+    .populate("owner", "fullName email")
+    .populate("members", "fullName email");
+
+  if (!projects || projects.length === 0) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { projects: [] }, "No projects found"));
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { projects }, "Projects fetched successfully"));
+});
+
+export { createProject, getProjects };
