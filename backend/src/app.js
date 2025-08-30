@@ -34,11 +34,13 @@ app.use(express.urlencoded({ extended: true }));
 import authRoutes from "./routes/auth.route.js";
 import actionLogRoutes from "./routes/actionLog.route.js";
 import taskRoutes from "./routes/task.route.js";
+import projectRoutes from "./routes/projects.route.js";
 
 // implement routing
 app.use("/api/auth", authRoutes);
 app.use("/api/actionlogs", actionLogRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/projects", projectRoutes);
 
 app.use(errorHandler);
 
