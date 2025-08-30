@@ -43,3 +43,6 @@ logs/
 *.tmp
 tmp/
 temp/
+.github/
+project_management_tool_(1).js
+project_management_tool.js

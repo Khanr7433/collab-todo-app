@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  fetchTasks,
-  createTask,
-  updateTask,
-  updateTaskStatus,
-  deleteTask,
-  smartAssign,
-} from "../services/taskApi";
+import { fetchTasks, updateTaskStatus, deleteTask } from "../services/taskApi";
 import useSocket from "../hooks/useSocket";
 import { useAuth } from "../context/AuthContext";
 import TaskModal from "../modal/TaskModal";
