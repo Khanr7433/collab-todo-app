@@ -15,7 +15,7 @@ const KanbanBoard = () => {
   const [draggedTask, setDraggedTask] = useState(null);
   const [dragOverColumn, setDragOverColumn] = useState(null);
 
-  const socket = useSocket(setTasks, user);
+  const { socket } = useSocket(setTasks, user);
 
   useEffect(() => {
     const loadTasks = async () => {
