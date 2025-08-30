@@ -214,4 +214,36 @@ const updateProject = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { project: populatedProject }, "Project updated successfully"));
 });
 
-export { createProject, getProjects, assignTaskToProject, updateProject };
+const getProjectTasks = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    throw new ApiError(400, "Project ID is required");
+  }
+
+  const project = await Project.findById(id);
+
+  if (!project) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  // Check if user has permission to view project tasks
+  const userId = req.user._id;
+  const isOwner = project.owner.toString() === userId.toString();
+  const isMember = project.members.some(member => member.toString() === userId.toString());
+
+  if (!isOwner && !isMember) {
+    throw new ApiError(403, "You don't have permission to view this project's tasks");
+  }
+
+  const tasks = await Task.find({ project: id })
+    .populate("assignedTo", "fullName email")
+    .populate("createdBy", "fullName email")
+    .populate("project", "name");
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { tasks, project: { _id: project._id, name: project.name } }, "Project tasks fetched successfully"));
+});
+
+export { createProject, getProjects, assignTaskToProject, updateProject, getProjectTasks };
