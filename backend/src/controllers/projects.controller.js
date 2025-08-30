@@ -82,4 +82,61 @@ const getProjects = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { projects }, "Projects fetched successfully"));
 });
 
-export { createProject, getProjects };
+const assignTaskToProject = asyncHandler(async (req, res) => {
+  const { taskId, projectId } = req.body;
+
+  if (!taskId || !projectId) {
+    throw new ApiError(400, "Task ID and Project ID are required");
+  }
+
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    throw new ApiError(404, "Task not found");
+  }
+
+  const project = await Project.findById(projectId);
+
+  if (!project) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  // Check if user has permission to assign task to project
+  const userId = req.user._id;
+  const isOwner = project.owner.toString() === userId.toString();
+  const isMember = project.members.some(member => member.toString() === userId.toString());
+
+  if (!isOwner && !isMember) {
+    throw new ApiError(403, "You don't have permission to assign tasks to this project");
+  }
+
+  task.project = projectId;
+
+  const updatedTask = await task.save();
+
+  if (!updatedTask) {
+    throw new ApiError(500, "Something went wrong while assigning task to project");
+  }
+
+  const populatedTask = await Task.findById(taskId)
+    .populate("assignedTo", "fullName")
+    .populate("createdBy", "fullName")
+    .populate("project", "name");
+
+  const actionLog = await ActionLog.create({
+    action: "Task Assigned to Project",
+    user: userId,
+    task: taskId,
+    project: projectId,
+  });
+
+  if (!actionLog) {
+    throw new ApiError(500, "Failed to create action log for task assignment");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { task: populatedTask }, "Task assigned to project successfully"));
+});
+
+export { createProject, getProjects, assignTaskToProject };
