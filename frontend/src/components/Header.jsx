@@ -32,6 +32,12 @@ const Header = () => {
               Kanban Board
             </Link>
             <Link
+              to="/projects"
+              className="hover:text-blue-600 transition-all"
+            >
+              Projects
+            </Link>
+            <Link
               to="/actionlog"
               className="hover:text-blue-600 transition-all"
             >
@@ -120,6 +126,13 @@ const Header = () => {
                     Kanban Board
                   </Link>
                   <Link
+                    to="/projects"
+                    className="block px-3 py-2 rounded hover:text-blue-600 transition-all"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Projects
+                  </Link>
+                  <Link
                     to="/actionlog"
                     className="block px-3 py-2 rounded hover:text-blue-600 transition-all"
                     onClick={() => setIsMenuOpen(false)}
@@ -143,6 +156,13 @@ const Header = () => {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Kanban Board
+                  </Link>
+                  <Link
+                    to="/projects"
+                    className="block px-3 py-2 rounded hover:text-blue-600 transition-all"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Projects
                   </Link>
                   <Link
                     to="/actionlog"
