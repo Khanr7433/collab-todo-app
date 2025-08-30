@@ -300,4 +300,66 @@ const addMemberToProject = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { project: populatedProject }, "Member added to project successfully"));
 });
 
-export { createProject, getProjects, assignTaskToProject, updateProject, getProjectTasks, addMemberToProject };
+const removeMemberFromProject = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { memberId } = req.body;
+
+  if (!id || !memberId) {
+    throw new ApiError(400, "Project ID and Member ID are required");
+  }
+
+  const project = await Project.findById(id);
+
+  if (!project) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  // Check if user has permission to remove members
+  const userId = req.user._id;
+  const isOwner = project.owner.toString() === userId.toString();
+
+  if (!isOwner) {
+    throw new ApiError(403, "Only project owner can remove members");
+  }
+
+  // Check if member is in the project
+  if (!project.members.includes(memberId)) {
+    throw new ApiError(400, "User is not a member of this project");
+  }
+
+  project.members = project.members.filter(member => member.toString() !== memberId);
+
+  const updatedProject = await project.save();
+
+  if (!updatedProject) {
+    throw new ApiError(500, "Something went wrong while removing member from project");
+  }
+
+  const populatedProject = await Project.findById(id)
+    .populate("owner", "fullName email")
+    .populate("members", "fullName email");
+
+  const actionLog = await ActionLog.create({
+    action: "Member Removed from Project",
+    user: userId,
+    project: id,
+  });
+
+  if (!actionLog) {
+    throw new ApiError(500, "Failed to create action log for member removal");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { project: populatedProject }, "Member removed from project successfully"));
+});
+
+export { 
+  createProject, 
+  getProjects, 
+  assignTaskToProject, 
+  updateProject, 
+  getProjectTasks, 
+  addMemberToProject, 
+  removeMemberFromProject 
+};
