@@ -31,10 +31,7 @@ const Header = () => {
             >
               Kanban Board
             </Link>
-            <Link
-              to="/projects"
-              className="hover:text-blue-600 transition-all"
-            >
+            <Link to="/projects" className="hover:text-blue-600 transition-all">
               Projects
             </Link>
             <Link

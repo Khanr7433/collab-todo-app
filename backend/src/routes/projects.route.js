@@ -1,12 +1,12 @@
 import express from "express";
-import { 
-  createProject, 
-  getProjects, 
-  assignTaskToProject, 
-  updateProject, 
-  getProjectTasks, 
-  addMemberToProject, 
-  removeMemberFromProject 
+import {
+  createProject,
+  getProjects,
+  assignTaskToProject,
+  updateProject,
+  getProjectTasks,
+  addMemberToProject,
+  removeMemberFromProject,
 } from "../controllers/projects.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 

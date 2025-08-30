@@ -32,12 +32,11 @@ const OnlineUsers = ({ onlineUsers = [] }) => {
       </h3>
       <div className="space-y-2">
         {onlineUsers.map((userId, index) => (
-          <div
-            key={userId}
-            className="flex items-center text-xs"
-          >
+          <div key={userId} className="flex items-center text-xs">
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-            <span className={`${isCurrentUser(userId) ? "font-semibold text-blue-600" : "text-gray-700"}`}>
+            <span
+              className={`${isCurrentUser(userId) ? "font-semibold text-blue-600" : "text-gray-700"}`}
+            >
               {isCurrentUser(userId) ? "You" : `User ${index + 1}`}
             </span>
           </div>

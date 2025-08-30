@@ -16,14 +16,16 @@ const socketHandler = (io) => {
     socket.on("sendNotification", ({ toUserId, message, type = "info" }) => {
       const targetSocket = onlineUsers.get(toUserId);
       if (targetSocket) {
-        io.to(targetSocket).emit("receiveNotification", { 
-          message, 
+        io.to(targetSocket).emit("receiveNotification", {
+          message,
           type,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
         console.log(`📨 Notification sent to user ${toUserId}: ${message}`);
       } else {
-        console.log(`⚠️ User ${toUserId} is not online to receive notification`);
+        console.log(
+          `⚠️ User ${toUserId} is not online to receive notification`
+        );
       }
     });
 
@@ -55,7 +57,7 @@ const socketHandler = (io) => {
 
     socket.on("disconnect", () => {
       console.log("🔴 Client disconnected:", socket.id);
-      
+
       // Remove user from online users when they disconnect
       for (let [userId, id] of onlineUsers.entries()) {
         if (id === socket.id) {
@@ -64,7 +66,7 @@ const socketHandler = (io) => {
           break;
         }
       }
-      
+
       // Emit updated online users list
       io.emit("onlineUsers", Array.from(onlineUsers.keys()));
     });

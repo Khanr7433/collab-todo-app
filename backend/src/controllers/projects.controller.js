@@ -40,7 +40,10 @@ const createProject = asyncHandler(async (req, res) => {
     .populate("members", "fullName email");
 
   if (!createdProject) {
-    throw new ApiError(500, "Something went wrong while fetching created project");
+    throw new ApiError(
+      500,
+      "Something went wrong while fetching created project"
+    );
   }
 
   const actionLog = await ActionLog.create({
@@ -55,7 +58,13 @@ const createProject = asyncHandler(async (req, res) => {
 
   res
     .status(201)
-    .json(new ApiResponse(201, { project: createdProject }, "Project created successfully"));
+    .json(
+      new ApiResponse(
+        201,
+        { project: createdProject },
+        "Project created successfully"
+      )
+    );
 });
 
 const getProjects = asyncHandler(async (req, res) => {
@@ -66,7 +75,7 @@ const getProjects = asyncHandler(async (req, res) => {
   }
 
   const projects = await Project.find({
-    $or: [{ owner: userId }, { members: userId }]
+    $or: [{ owner: userId }, { members: userId }],
   })
     .populate("owner", "fullName email")
     .populate("members", "fullName email");
@@ -104,10 +113,15 @@ const assignTaskToProject = asyncHandler(async (req, res) => {
   // Check if user has permission to assign task to project
   const userId = req.user._id;
   const isOwner = project.owner.toString() === userId.toString();
-  const isMember = project.members.some(member => member.toString() === userId.toString());
+  const isMember = project.members.some(
+    (member) => member.toString() === userId.toString()
+  );
 
   if (!isOwner && !isMember) {
-    throw new ApiError(403, "You don't have permission to assign tasks to this project");
+    throw new ApiError(
+      403,
+      "You don't have permission to assign tasks to this project"
+    );
   }
 
   task.project = projectId;
@@ -115,7 +129,10 @@ const assignTaskToProject = asyncHandler(async (req, res) => {
   const updatedTask = await task.save();
 
   if (!updatedTask) {
-    throw new ApiError(500, "Something went wrong while assigning task to project");
+    throw new ApiError(
+      500,
+      "Something went wrong while assigning task to project"
+    );
   }
 
   const populatedTask = await Task.findById(taskId)
@@ -136,7 +153,13 @@ const assignTaskToProject = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, { task: populatedTask }, "Task assigned to project successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { task: populatedTask },
+        "Task assigned to project successfully"
+      )
+    );
 });
 
 const updateProject = asyncHandler(async (req, res) => {
@@ -211,7 +234,13 @@ const updateProject = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, { project: populatedProject }, "Project updated successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { project: populatedProject },
+        "Project updated successfully"
+      )
+    );
 });
 
 const getProjectTasks = asyncHandler(async (req, res) => {
@@ -230,10 +259,15 @@ const getProjectTasks = asyncHandler(async (req, res) => {
   // Check if user has permission to view project tasks
   const userId = req.user._id;
   const isOwner = project.owner.toString() === userId.toString();
-  const isMember = project.members.some(member => member.toString() === userId.toString());
+  const isMember = project.members.some(
+    (member) => member.toString() === userId.toString()
+  );
 
   if (!isOwner && !isMember) {
-    throw new ApiError(403, "You don't have permission to view this project's tasks");
+    throw new ApiError(
+      403,
+      "You don't have permission to view this project's tasks"
+    );
   }
 
   const tasks = await Task.find({ project: id })
@@ -243,7 +277,13 @@ const getProjectTasks = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, { tasks, project: { _id: project._id, name: project.name } }, "Project tasks fetched successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { tasks, project: { _id: project._id, name: project.name } },
+        "Project tasks fetched successfully"
+      )
+    );
 });
 
 const addMemberToProject = asyncHandler(async (req, res) => {
@@ -278,7 +318,10 @@ const addMemberToProject = asyncHandler(async (req, res) => {
   const updatedProject = await project.save();
 
   if (!updatedProject) {
-    throw new ApiError(500, "Something went wrong while adding member to project");
+    throw new ApiError(
+      500,
+      "Something went wrong while adding member to project"
+    );
   }
 
   const populatedProject = await Project.findById(id)
@@ -297,7 +340,13 @@ const addMemberToProject = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, { project: populatedProject }, "Member added to project successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { project: populatedProject },
+        "Member added to project successfully"
+      )
+    );
 });
 
 const removeMemberFromProject = asyncHandler(async (req, res) => {
@@ -327,12 +376,17 @@ const removeMemberFromProject = asyncHandler(async (req, res) => {
     throw new ApiError(400, "User is not a member of this project");
   }
 
-  project.members = project.members.filter(member => member.toString() !== memberId);
+  project.members = project.members.filter(
+    (member) => member.toString() !== memberId
+  );
 
   const updatedProject = await project.save();
 
   if (!updatedProject) {
-    throw new ApiError(500, "Something went wrong while removing member from project");
+    throw new ApiError(
+      500,
+      "Something went wrong while removing member from project"
+    );
   }
 
   const populatedProject = await Project.findById(id)
@@ -351,15 +405,21 @@ const removeMemberFromProject = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, { project: populatedProject }, "Member removed from project successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { project: populatedProject },
+        "Member removed from project successfully"
+      )
+    );
 });
 
-export { 
-  createProject, 
-  getProjects, 
-  assignTaskToProject, 
-  updateProject, 
-  getProjectTasks, 
-  addMemberToProject, 
-  removeMemberFromProject 
+export {
+  createProject,
+  getProjects,
+  assignTaskToProject,
+  updateProject,
+  getProjectTasks,
+  addMemberToProject,
+  removeMemberFromProject,
 };

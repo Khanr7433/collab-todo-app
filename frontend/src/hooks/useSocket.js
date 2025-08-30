@@ -49,16 +49,30 @@ const useSocket = (setTasks, currentUser = null) => {
 
       switch (type) {
         case "success":
-          toast.success(message, { ...toastOptions, style: { ...toastOptions.style, background: "#10B981" } });
+          toast.success(message, {
+            ...toastOptions,
+            style: { ...toastOptions.style, background: "#10B981" },
+          });
           break;
         case "error":
-          toast.error(message, { ...toastOptions, style: { ...toastOptions.style, background: "#EF4444" } });
+          toast.error(message, {
+            ...toastOptions,
+            style: { ...toastOptions.style, background: "#EF4444" },
+          });
           break;
         case "warning":
-          toast(message, { ...toastOptions, icon: "⚠️", style: { ...toastOptions.style, background: "#F59E0B" } });
+          toast(message, {
+            ...toastOptions,
+            icon: "⚠️",
+            style: { ...toastOptions.style, background: "#F59E0B" },
+          });
           break;
         default:
-          toast(message, { ...toastOptions, icon: "ℹ️", style: { ...toastOptions.style, background: "#3B82F6" } });
+          toast(message, {
+            ...toastOptions,
+            icon: "ℹ️",
+            style: { ...toastOptions.style, background: "#3B82F6" },
+          });
       }
     });
 

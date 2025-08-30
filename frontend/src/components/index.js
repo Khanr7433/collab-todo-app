@@ -5,4 +5,11 @@ import ConflictResolver from "./ConflictResolver";
 import ProjectsList from "./ProjectsList";
 import OnlineUsers from "./OnlineUsers";
 
-export { Header, Footer, TaskCard, ConflictResolver, ProjectsList, OnlineUsers };
+export {
+  Header,
+  Footer,
+  TaskCard,
+  ConflictResolver,
+  ProjectsList,
+  OnlineUsers,
+};

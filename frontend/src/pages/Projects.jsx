@@ -15,7 +15,7 @@ const Projects = () => {
           <div className="lg:col-span-3">
             <ProjectsList />
           </div>
-          
+
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-8">
