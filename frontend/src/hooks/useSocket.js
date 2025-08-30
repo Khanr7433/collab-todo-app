@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
 
@@ -10,6 +10,8 @@ const socket = io(import.meta.env.VITE_WEBSOCKET_URL, {
 });
 
 const useSocket = (setTasks, currentUser = null) => {
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
   useEffect(() => {
     const isCurrentUserAction = (actionUser) => {
       if (!currentUser || !actionUser) return false;
@@ -23,6 +25,44 @@ const useSocket = (setTasks, currentUser = null) => {
       return user.fullName || user.name || "Unknown User";
     };
 
+    // Emit user online status when connected
+    if (currentUser) {
+      const userId = currentUser?.data?.user?._id || currentUser?._id;
+      if (userId) {
+        socket.emit("userOnline", userId);
+      }
+    }
+
+    // Handle online users updates
+    socket.on("onlineUsers", (users) => {
+      setOnlineUsers(users);
+    });
+
+    // Handle notifications
+    socket.on("receiveNotification", ({ message, type = "info" }) => {
+      const toastOptions = {
+        duration: 4000,
+        style: {
+          color: "white",
+        },
+      };
+
+      switch (type) {
+        case "success":
+          toast.success(message, { ...toastOptions, style: { ...toastOptions.style, background: "#10B981" } });
+          break;
+        case "error":
+          toast.error(message, { ...toastOptions, style: { ...toastOptions.style, background: "#EF4444" } });
+          break;
+        case "warning":
+          toast(message, { ...toastOptions, icon: "⚠️", style: { ...toastOptions.style, background: "#F59E0B" } });
+          break;
+        default:
+          toast(message, { ...toastOptions, icon: "ℹ️", style: { ...toastOptions.style, background: "#3B82F6" } });
+      }
+    });
+
+    // Existing task-related events
     socket.on("taskCreated", (taskData) => {
       const newTask = taskData.data?.task || taskData;
       const creator = newTask.createdBy;
@@ -128,8 +168,55 @@ const useSocket = (setTasks, currentUser = null) => {
       }
     });
 
+    // Project-related events
+    socket.on("projectCreated", (projectData) => {
+      const newProject = projectData.data?.project || projectData;
+      const creator = newProject.owner;
+
+      if (!isCurrentUserAction(creator)) {
+        toast.success(
+          `${getUserDisplayName(creator)} created a new project: "${newProject.name}"`,
+          {
+            icon: "🏗️",
+            duration: 4000,
+            style: {
+              background: "#10B981",
+              color: "white",
+            },
+          }
+        );
+      }
+    });
+
+    socket.on("taskAssignedToProject", (data) => {
+      const task = data.data?.task || data.task;
+      const project = data.data?.project || data.project;
+      const assigner = data.data?.user || data.user;
+
+      if (!isCurrentUserAction(assigner)) {
+        toast(
+          `${getUserDisplayName(assigner)} assigned task "${task?.title}" to project "${project?.name}"`,
+          {
+            icon: "📋",
+            duration: 4000,
+            style: {
+              background: "#8B5CF6",
+              color: "white",
+            },
+          }
+        );
+      }
+    });
+
     socket.on("connect", () => {
       console.log("Socket connected");
+      // Re-emit user online status on reconnect
+      if (currentUser) {
+        const userId = currentUser?.data?.user?._id || currentUser?._id;
+        if (userId) {
+          socket.emit("userOnline", userId);
+        }
+      }
     });
 
     socket.on("disconnect", () => {
@@ -141,17 +228,26 @@ const useSocket = (setTasks, currentUser = null) => {
     });
 
     return () => {
+      socket.off("onlineUsers");
+      socket.off("receiveNotification");
       socket.off("taskCreated");
       socket.off("taskUpdated");
       socket.off("taskDeleted");
       socket.off("taskMoved");
+      socket.off("projectCreated");
+      socket.off("taskAssignedToProject");
       socket.off("connect");
       socket.off("disconnect");
       socket.off("reconnect");
     };
   }, [setTasks, currentUser]);
 
-  return socket;
+  // Function to send notification to a specific user
+  const sendNotification = (toUserId, message, type = "info") => {
+    socket.emit("sendNotification", { toUserId, message, type });
+  };
+
+  return { socket, onlineUsers, sendNotification };
 };
 
 export default useSocket;
