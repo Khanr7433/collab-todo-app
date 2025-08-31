@@ -35,18 +35,18 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-black border border-gray-700 rounded-lg p-6 w-full max-w-6xl max-h-[90vh] overflow-hidden">
-        <div className="flex justify-between items-center mb-6">
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="bg-black border border-gray-700 rounded-xl p-8 w-full max-w-6xl max-h-[90vh] overflow-hidden shadow-2xl">
+        <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-white">{project?.name}</h2>
+            <h2 className="text-3xl font-bold text-white">{project?.name}</h2>
             <p className="text-gray-400 mt-1">
               {tasks.length} {tasks.length === 1 ? "task" : "tasks"} in this project
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-300 transition-colors"
+            className="p-2 rounded-lg text-gray-400 hover:text-gray-300 hover:bg-gray-800 transition-all duration-200"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -59,11 +59,11 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
           </div>
         ) : (
-          <div className="overflow-y-auto max-h-[70vh]">
+          <div className="overflow-y-auto max-h-[70vh] custom-scrollbar">
             {tasks.length === 0 ? (
-              <div className="text-center py-12">
+              <div className="text-center py-16 bg-gray-900/50 rounded-lg border border-gray-800">
                 <svg
-                  className="mx-auto h-12 w-12 text-gray-500"
+                  className="mx-auto h-16 w-16 text-gray-500 mb-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -71,13 +71,13 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={1.5}
                     d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                   />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-white">No tasks</h3>
-                <p className="mt-1 text-sm text-gray-400">
-                  This project doesn't have any tasks assigned yet.
+                <h3 className="text-lg font-medium text-white mb-2">No tasks</h3>
+                <p className="text-gray-400 max-w-sm mx-auto">
+                  This project doesn't have any tasks assigned yet. Assign tasks from the Kanban board to see them here.
                 </p>
               </div>
             ) : (
@@ -89,20 +89,20 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
                   return (
                     <div
                       key={status}
-                      className="bg-gray-900 border border-gray-700 rounded-lg p-4"
+                      className="bg-gray-900 border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-all duration-200"
                     >
-                      <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-700">
+                      <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-700">
                         <h3 className="text-lg font-semibold text-white">
                           {status === "in-progress"
                             ? "In Progress"
                             : status.charAt(0).toUpperCase() + status.slice(1)}
                         </h3>
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium border bg-white text-black">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-600/20 text-blue-400 border border-blue-600/30">
                           {taskCount}
                         </span>
                       </div>
 
-                      <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
+                      <div className="space-y-4 max-h-64 overflow-y-auto custom-scrollbar">
                         {taskCount > 0 ? (
                           statusTasks.map((task) => (
                             <TaskCard
@@ -114,7 +114,7 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
                             />
                           ))
                         ) : (
-                          <div className="text-center py-4">
+                          <div className="text-center py-8">
                             <p className="text-sm text-gray-500">
                               No {status.toLowerCase()} tasks
                             </p>
