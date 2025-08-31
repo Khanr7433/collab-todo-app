@@ -4,6 +4,7 @@ import {
   createProject,
   updateProject,
 } from "../services/projectApi.js";
+import { ProjectTasks } from "../components";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
@@ -13,6 +14,8 @@ const ProjectsList = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newProject, setNewProject] = useState({ name: "", description: "" });
   const [editingProject, setEditingProject] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [showProjectTasks, setShowProjectTasks] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -91,6 +94,16 @@ const ProjectsList = () => {
       default:
         return "bg-gray-700 text-gray-300 border-gray-600";
     }
+  };
+
+  const handleViewTasks = (project) => {
+    setSelectedProject(project);
+    setShowProjectTasks(true);
+  };
+
+  const handleCloseTasksModal = () => {
+    setShowProjectTasks(false);
+    setSelectedProject(null);
   };
 
   const isOwner = (project) => {
@@ -333,7 +346,7 @@ const ProjectsList = () => {
               </span>
             </div>
 
-            <div className="space-y-1 text-xs">
+            <div className="space-y-1 text-xs mb-3">
               <div className="flex items-center">
                 <span className="text-gray-500">Owner:</span>
                 <span className="font-medium text-gray-300 ml-1">
@@ -346,6 +359,16 @@ const ProjectsList = () => {
                   {project.members?.length || 0}
                 </span>
               </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleViewTasks(project)}
+                className="flex-1 bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700 transition-colors"
+              >
+                📋 View Tasks
+              </button>
             </div>
           </div>
         ))}
@@ -372,6 +395,13 @@ const ProjectsList = () => {
           </p>
         </div>
       )}
+
+      {/* Project Tasks Modal */}
+      <ProjectTasks
+        project={selectedProject}
+        isOpen={showProjectTasks}
+        onClose={handleCloseTasksModal}
+      />
     </div>
   );
 };

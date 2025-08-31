@@ -1,5 +1,5 @@
 import React from "react";
-import { ProjectsList, OnlineUsers } from "../components";
+import { ProjectsList, OnlineUsers, ProjectTasks } from "../components";
 import useSocket from "../hooks/useSocket";
 import { useAuth } from "../context/AuthContext";
 
