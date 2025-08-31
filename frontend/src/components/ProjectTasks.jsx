@@ -9,7 +9,7 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
 
   const fetchProjectTasks = useCallback(async () => {
     if (!project?._id) return;
-    
+
     try {
       setLoading(true);
       const response = await getProjectTasks(project._id);
