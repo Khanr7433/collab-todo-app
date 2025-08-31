@@ -41,15 +41,26 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
           <div>
             <h2 className="text-3xl font-bold text-white">{project?.name}</h2>
             <p className="text-gray-400 mt-1">
-              {tasks.length} {tasks.length === 1 ? "task" : "tasks"} in this project
+              {tasks.length} {tasks.length === 1 ? "task" : "tasks"} in this
+              project
             </p>
           </div>
           <button
             onClick={onClose}
             className="p-2 rounded-lg text-gray-400 hover:text-gray-300 hover:bg-gray-800 transition-all duration-200"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -75,9 +86,12 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
                     d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                   />
                 </svg>
-                <h3 className="text-lg font-medium text-white mb-2">No tasks</h3>
+                <h3 className="text-lg font-medium text-white mb-2">
+                  No tasks
+                </h3>
                 <p className="text-gray-400 max-w-sm mx-auto">
-                  This project doesn't have any tasks assigned yet. Assign tasks from the Kanban board to see them here.
+                  This project doesn't have any tasks assigned yet. Assign tasks
+                  from the Kanban board to see them here.
                 </p>
               </div>
             ) : (

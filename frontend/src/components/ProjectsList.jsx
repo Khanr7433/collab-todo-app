@@ -132,8 +132,12 @@ const ProjectsList = () => {
     <div className="p-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Projects</h1>
-          <p className="text-gray-400 mt-1">Manage your collaborative projects</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">
+            Projects
+          </h1>
+          <p className="text-gray-400 mt-1">
+            Manage your collaborative projects
+          </p>
         </div>
         <button
           onClick={() => setShowCreateForm(true)}
@@ -305,7 +309,7 @@ const ProjectsList = () => {
             className="group bg-black border border-gray-700 rounded-lg p-6 hover:shadow-lg hover:border-gray-600 transition-all duration-200 hover:shadow-white/5"
             style={{
               animationDelay: `${index * 100}ms`,
-              animation: 'fadeInUp 0.5s ease-out forwards'
+              animation: "fadeInUp 0.5s ease-out forwards",
             }}
           >
             <div className="flex justify-between items-start mb-4">
@@ -358,8 +362,18 @@ const ProjectsList = () => {
 
             <div className="space-y-2 mb-5">
               <div className="flex items-center gap-2 text-xs">
-                <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                <svg
+                  className="w-3 h-3 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
                 </svg>
                 <span className="text-gray-500">Owner:</span>
                 <span className="font-medium text-gray-300 group-hover:text-white transition-colors">
@@ -367,8 +381,18 @@ const ProjectsList = () => {
                 </span>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                <svg
+                  className="w-3 h-3 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
                 </svg>
                 <span className="text-gray-500">Members:</span>
                 <span className="font-medium text-gray-300 group-hover:text-white transition-colors">

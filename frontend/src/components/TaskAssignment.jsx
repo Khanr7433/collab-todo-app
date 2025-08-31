@@ -25,7 +25,7 @@ const TaskAssignment = ({ isOpen, onClose }) => {
         getProjects(),
         fetchTasks(),
       ]);
-      
+
       setProjects(projectsRes.data.data.projects || []);
       setTasks(tasksRes.data.data.tasks || []);
     } catch (error) {
@@ -38,7 +38,7 @@ const TaskAssignment = ({ isOpen, onClose }) => {
 
   const handleAssignment = async (e) => {
     e.preventDefault();
-    
+
     if (!selectedTask || !selectedProject) {
       toast.error("Please select both a task and a project");
       return;
@@ -50,7 +50,7 @@ const TaskAssignment = ({ isOpen, onClose }) => {
         taskId: selectedTask,
         projectId: selectedProject,
       });
-      
+
       toast.success("Task assigned to project successfully");
       onClose();
       setSelectedTask("");
@@ -64,14 +64,15 @@ const TaskAssignment = ({ isOpen, onClose }) => {
   };
 
   const getUnassignedTasks = () => {
-    return tasks.filter(task => !task.project);
+    return tasks.filter((task) => !task.project);
   };
 
   const getUserProjects = () => {
     const userId = user?.data?.user?._id || user?._id;
-    return projects.filter(project => 
-      project.owner?._id === userId || 
-      project.members?.some(member => member._id === userId)
+    return projects.filter(
+      (project) =>
+        project.owner?._id === userId ||
+        project.members?.some((member) => member._id === userId)
     );
   };
 
@@ -81,13 +82,25 @@ const TaskAssignment = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-black border border-gray-700 rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-white">Assign Task to Project</h2>
+          <h2 className="text-xl font-bold text-white">
+            Assign Task to Project
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-300 transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
