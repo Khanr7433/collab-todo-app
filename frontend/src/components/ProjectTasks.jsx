@@ -8,6 +8,8 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
 
   const fetchProjectTasks = useCallback(async () => {
+    if (!project?._id) return;
+    
     try {
       setLoading(true);
       const response = await getProjectTasks(project._id);
@@ -18,11 +20,14 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
     } finally {
       setLoading(false);
     }
-  }, [project._id]);
+  }, [project?._id]);
 
   useEffect(() => {
     if (isOpen && project?._id) {
       fetchProjectTasks();
+    } else {
+      // Clear tasks when modal is closed or project is invalid
+      setTasks([]);
     }
   }, [isOpen, project, fetchProjectTasks]);
 
@@ -32,7 +37,7 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
 
   const statuses = ["Todo", "in-progress", "Done"];
 
-  if (!isOpen) return null;
+  if (!isOpen || !project) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 backdrop-blur-sm">
