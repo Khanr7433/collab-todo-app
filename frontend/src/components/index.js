@@ -4,6 +4,7 @@ import TaskCard from "./TaskCard";
 import ConflictResolver from "./ConflictResolver";
 import ProjectsList from "./ProjectsList";
 import OnlineUsers from "./OnlineUsers";
+import TaskAssignment from "./TaskAssignment";
 
 export {
   Header,
@@ -12,4 +13,5 @@ export {
   ConflictResolver,
   ProjectsList,
   OnlineUsers,
+  TaskAssignment,
 };

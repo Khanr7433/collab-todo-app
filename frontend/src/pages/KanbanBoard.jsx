@@ -3,7 +3,7 @@ import { fetchTasks, updateTaskStatus, deleteTask } from "../services/taskApi";
 import useSocket from "../hooks/useSocket";
 import { useAuth } from "../context/AuthContext";
 import TaskModal from "../modal/TaskModal";
-import { ConflictResolver, TaskCard } from "../components";
+import { ConflictResolver, TaskCard, TaskAssignment } from "../components";
 import toast from "react-hot-toast";
 
 const KanbanBoard = () => {
@@ -14,6 +14,7 @@ const KanbanBoard = () => {
   const [loading, setLoading] = useState(true);
   const [draggedTask, setDraggedTask] = useState(null);
   const [dragOverColumn, setDragOverColumn] = useState(null);
+  const [showTaskAssignment, setShowTaskAssignment] = useState(false);
 
   const { socket } = useSocket(setTasks, user);
 
@@ -198,12 +199,20 @@ const KanbanBoard = () => {
             Total: {safeTasks.length} tasks • Drag to move between columns
           </p>
         </div>
-        <button
-          onClick={() => setSelectedTask({})}
-          className="border border-gray-600 text-gray-300 px-4 py-2 rounded hover:text-blue-400 hover:border-blue-400 transition-all"
-        >
-          + Add Task
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowTaskAssignment(true)}
+            className="border border-gray-600 text-gray-300 px-4 py-2 rounded hover:text-blue-400 hover:border-blue-400 transition-all"
+          >
+            📋 Assign to Project
+          </button>
+          <button
+            onClick={() => setSelectedTask({})}
+            className="border border-gray-600 text-gray-300 px-4 py-2 rounded hover:text-blue-400 hover:border-blue-400 transition-all"
+          >
+            + Add Task
+          </button>
+        </div>
       </div>
 
       {/* Kanban Columns */}
@@ -301,6 +310,11 @@ const KanbanBoard = () => {
           onClose={() => setConflict(null)}
         />
       )}
+
+      <TaskAssignment
+        isOpen={showTaskAssignment}
+        onClose={() => setShowTaskAssignment(false)}
+      />
     </div>
   );
 };
