@@ -6,16 +6,36 @@ const socketHandler = (io) => {
     console.log("🟢 Client connected:", socket.id);
 
     // Handle user going online
-    socket.on("userOnline", (userId) => {
-      onlineUsers.set(userId, socket.id);
-      io.emit("onlineUsers", Array.from(onlineUsers.keys()));
+    socket.on("userOnline", async (userData) => {
+      try {
+        // Extract userId from userData (can be just ID or full user object)
+        const userId = userData._id || userData;
+
+        // Store user data with socket ID
+        onlineUsers.set(userId, {
+          socketId: socket.id,
+          userData: userData,
+        });
+
+        // Get all online users data
+        const onlineUsersData = Array.from(onlineUsers.entries()).map(
+          ([userId, data]) => ({
+            _id: userId,
+            ...data.userData,
+          })
+        );
+
+        io.emit("onlineUsers", onlineUsersData);
+      } catch (error) {
+        console.error("Error handling userOnline:", error);
+      }
     });
 
     // Handle sending notifications
     socket.on("sendNotification", ({ toUserId, message, type = "info" }) => {
-      const targetSocket = onlineUsers.get(toUserId);
-      if (targetSocket) {
-        io.to(targetSocket).emit("receiveNotification", {
+      const userEntry = onlineUsers.get(toUserId);
+      if (userEntry && userEntry.socketId) {
+        io.to(userEntry.socketId).emit("receiveNotification", {
           message,
           type,
           timestamp: new Date().toISOString(),
@@ -53,15 +73,23 @@ const socketHandler = (io) => {
       console.log("🔴 Client disconnected:", socket.id);
 
       // Remove user from online users when they disconnect
-      for (let [userId, id] of onlineUsers.entries()) {
-        if (id === socket.id) {
+      for (let [userId, userEntry] of onlineUsers.entries()) {
+        if (userEntry.socketId === socket.id) {
           onlineUsers.delete(userId);
           break;
         }
       }
 
+      // Get updated online users data
+      const onlineUsersData = Array.from(onlineUsers.entries()).map(
+        ([userId, data]) => ({
+          _id: userId,
+          ...data.userData,
+        })
+      );
+
       // Emit updated online users list
-      io.emit("onlineUsers", Array.from(onlineUsers.keys()));
+      io.emit("onlineUsers", onlineUsersData);
     });
   });
 };

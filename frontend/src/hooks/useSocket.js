@@ -27,9 +27,9 @@ const useSocket = (setTasks, currentUser = null) => {
 
     // Emit user online status when connected
     if (currentUser) {
-      const userId = currentUser?.data?.user?._id || currentUser?._id;
-      if (userId) {
-        socket.emit("userOnline", userId);
+      const userData = currentUser?.data?.user || currentUser;
+      if (userData?._id) {
+        socket.emit("userOnline", userData);
       }
     }
 

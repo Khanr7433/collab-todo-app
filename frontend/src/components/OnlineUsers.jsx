@@ -8,8 +8,20 @@ const OnlineUsers = ({ onlineUsers = [] }) => {
     return user?.data?.user?._id || user?._id;
   };
 
-  const isCurrentUser = (userId) => {
-    return getCurrentUserId() === userId;
+  const isCurrentUser = (onlineUser) => {
+    const currentUserId = getCurrentUserId();
+    const onlineUserId = onlineUser?._id || onlineUser;
+    return currentUserId === onlineUserId;
+  };
+
+  const getUserDisplayName = (onlineUser) => {
+    if (typeof onlineUser === "string") return `User ${onlineUser.slice(-4)}`;
+    return (
+      onlineUser?.fullName ||
+      onlineUser?.name ||
+      onlineUser?.email ||
+      "Unknown User"
+    );
   };
 
   if (onlineUsers.length === 0) {
@@ -51,23 +63,28 @@ const OnlineUsers = ({ onlineUsers = [] }) => {
         </span>
       </div>
       <div className="space-y-3">
-        {onlineUsers.map((userId, index) => (
-          <div
-            key={userId}
-            className="group flex items-center p-3 bg-gray-900/50 rounded-lg border border-gray-700 hover:border-gray-600 transition-all duration-200"
-          >
-            <div className="w-3 h-3 bg-green-500 rounded-full mr-3 animate-pulse"></div>
-            <div className="flex-1">
-              <span
-                className={`text-sm font-medium ${isCurrentUser(userId) ? "text-blue-400" : "text-gray-300 group-hover:text-white"} transition-colors`}
-              >
-                {isCurrentUser(userId) ? "You" : `User ${index + 1}`}
-              </span>
-              <p className="text-xs text-gray-500">Online now</p>
+        {onlineUsers.map((onlineUser) => {
+          const userId = onlineUser?._id || onlineUser;
+          const displayName = getUserDisplayName(onlineUser);
+
+          return (
+            <div
+              key={userId}
+              className="group flex items-center p-3 bg-gray-900/50 rounded-lg border border-gray-700 hover:border-gray-600 transition-all duration-200"
+            >
+              <div className="w-3 h-3 bg-green-500 rounded-full mr-3 animate-pulse"></div>
+              <div className="flex-1">
+                <span
+                  className={`text-sm font-medium ${isCurrentUser(onlineUser) ? "text-blue-400" : "text-gray-300 group-hover:text-white"} transition-colors`}
+                >
+                  {isCurrentUser(onlineUser) ? "You" : displayName}
+                </span>
+                <p className="text-xs text-gray-500">Online now</p>
+              </div>
+              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
             </div>
-            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
