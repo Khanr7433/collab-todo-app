@@ -130,11 +130,14 @@ const ProjectsList = () => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-white">Projects</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Projects</h1>
+          <p className="text-gray-400 mt-1">Manage your collaborative projects</p>
+        </div>
         <button
           onClick={() => setShowCreateForm(true)}
-          className="border border-gray-600 text-gray-300 px-4 py-2 rounded-lg hover:text-blue-400 hover:border-blue-400 transition-all flex items-center gap-2"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium hover:shadow-lg hover:shadow-blue-500/25"
         >
           <svg
             className="w-5 h-5"
@@ -149,7 +152,7 @@ const ProjectsList = () => {
               d="M12 6v6m0 0v6m0-6h6m-6 0H6"
             />
           </svg>
-          New Project
+          Create Project
         </button>
       </div>
 
@@ -296,19 +299,26 @@ const ProjectsList = () => {
 
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
+        {projects.map((project, index) => (
           <div
             key={project._id}
-            className="bg-black border border-gray-700 rounded-lg p-4 hover:shadow-md hover:border-gray-600 transition-all"
+            className="group bg-black border border-gray-700 rounded-lg p-6 hover:shadow-lg hover:border-gray-600 transition-all duration-200 hover:shadow-white/5"
+            style={{
+              animationDelay: `${index * 100}ms`,
+              animation: 'fadeInUp 0.5s ease-out forwards'
+            }}
           >
-            <div className="flex justify-between items-start mb-3">
-              <h3 className="text-lg font-semibold text-white flex-1">
-                {project.name}
-              </h3>
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-blue-500 group-hover:bg-blue-400 transition-colors"></div>
+                <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors flex-1">
+                  {project.name}
+                </h3>
+              </div>
               {isOwner(project) && (
                 <button
                   onClick={() => setEditingProject(project)}
-                  className="p-1 rounded hover:bg-gray-800 text-gray-400 hover:text-gray-300 transition-colors"
+                  className="p-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-300 transition-all opacity-0 group-hover:opacity-100"
                   title="Edit project"
                 >
                   <svg
@@ -329,33 +339,39 @@ const ProjectsList = () => {
             </div>
 
             {project.description && (
-              <p className="text-sm text-gray-400 mb-3 line-clamp-2">
+              <p className="text-sm text-gray-400 mb-4 line-clamp-2 group-hover:text-gray-300 transition-colors">
                 {project.description}
               </p>
             )}
 
-            <div className="flex justify-between items-center mb-3">
+            <div className="flex justify-between items-center mb-4">
               <span
-                className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getStatusColor(project.status)}`}
+                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border transition-all ${getStatusColor(project.status)}`}
               >
                 {project.status?.charAt(0).toUpperCase() +
                   project.status?.slice(1)}
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500 group-hover:text-gray-400 transition-colors">
                 {formatDate(project.createdAt)}
               </span>
             </div>
 
-            <div className="space-y-1 text-xs mb-3">
-              <div className="flex items-center">
+            <div className="space-y-2 mb-5">
+              <div className="flex items-center gap-2 text-xs">
+                <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
                 <span className="text-gray-500">Owner:</span>
-                <span className="font-medium text-gray-300 ml-1">
+                <span className="font-medium text-gray-300 group-hover:text-white transition-colors">
                   {project.owner?.fullName}
                 </span>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center gap-2 text-xs">
+                <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
                 <span className="text-gray-500">Members:</span>
-                <span className="font-medium text-gray-300 ml-1">
+                <span className="font-medium text-gray-300 group-hover:text-white transition-colors">
                   {project.members?.length || 0}
                 </span>
               </div>
@@ -365,7 +381,7 @@ const ProjectsList = () => {
             <div className="flex gap-2">
               <button
                 onClick={() => handleViewTasks(project)}
-                className="flex-1 bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700 transition-colors"
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-all duration-200 font-medium hover:shadow-lg hover:shadow-blue-500/25 group-hover:shadow-lg"
               >
                 📋 View Tasks
               </button>
