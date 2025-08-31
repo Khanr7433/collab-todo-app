@@ -8,7 +8,6 @@ const socketHandler = (io) => {
     // Handle user going online
     socket.on("userOnline", (userId) => {
       onlineUsers.set(userId, socket.id);
-      console.log(`👤 User ${userId} is now online`);
       io.emit("onlineUsers", Array.from(onlineUsers.keys()));
     });
 
@@ -21,11 +20,6 @@ const socketHandler = (io) => {
           type,
           timestamp: new Date().toISOString(),
         });
-        console.log(`📨 Notification sent to user ${toUserId}: ${message}`);
-      } else {
-        console.log(
-          `⚠️ User ${toUserId} is not online to receive notification`
-        );
       }
     });
 
@@ -62,7 +56,6 @@ const socketHandler = (io) => {
       for (let [userId, id] of onlineUsers.entries()) {
         if (id === socket.id) {
           onlineUsers.delete(userId);
-          console.log(`👋 User ${userId} is now offline`);
           break;
         }
       }

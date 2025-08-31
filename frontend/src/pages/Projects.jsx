@@ -8,7 +8,7 @@ const Projects = () => {
   const { onlineUsers } = useSocket(() => {}, user);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Main Projects Content */}
