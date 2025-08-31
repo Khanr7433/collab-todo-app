@@ -1,5 +1,5 @@
 import React from "react";
-import { ProjectsList, OnlineUsers, ProjectTasks } from "../components";
+import { ProjectsList, OnlineUsers, ProjectTasks, ProjectDashboard } from "../components";
 import useSocket from "../hooks/useSocket";
 import { useAuth } from "../context/AuthContext";
 
@@ -10,6 +10,11 @@ const Projects = () => {
   return (
     <div className="min-h-screen bg-black">
       <div className="container mx-auto px-4 py-8">
+        {/* Dashboard Section */}
+        <div className="mb-8">
+          <ProjectDashboard />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Main Projects Content */}
           <div className="lg:col-span-3">

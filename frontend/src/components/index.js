@@ -6,6 +6,7 @@ import ProjectsList from "./ProjectsList";
 import OnlineUsers from "./OnlineUsers";
 import TaskAssignment from "./TaskAssignment";
 import ProjectTasks from "./ProjectTasks";
+import ProjectDashboard from "./ProjectDashboard";
 
 export {
   Header,
@@ -16,4 +17,5 @@ export {
   OnlineUsers,
   TaskAssignment,
   ProjectTasks,
+  ProjectDashboard,
 };
