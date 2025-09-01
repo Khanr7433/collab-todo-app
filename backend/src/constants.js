@@ -1,4 +1,4 @@
-export const DB_NAME = "collab-todo-app";
+export const DB_NAME = "project-management-system";
 import dotenv from "dotenv";
 
 dotenv.config();

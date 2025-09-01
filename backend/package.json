@@ -1,7 +1,7 @@
 {
-  "name": "collaborative_to-do_app_backend",
+  "name": "project_management_system_backend",
   "version": "1.0.0",
-  "description": "Collaborative To-Do App",
+  "description": "Project Management System",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
@@ -10,7 +10,8 @@
     "dev": "nodemon src/index.js"
   },
   "keywords": [
-    "to-do",
+    "project-management",
+    "task-management",
     "backend",
     "express",
     "mongodb",

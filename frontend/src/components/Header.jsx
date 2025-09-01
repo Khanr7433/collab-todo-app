@@ -20,7 +20,7 @@ const Header = () => {
               to="/"
               className="text-xl font-bold hover:text-blue-600 transition-all"
             >
-              Collab Todo App
+              Project Management System
             </Link>
           </div>
 

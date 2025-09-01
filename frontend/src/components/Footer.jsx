@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-center items-center text-center">
           <p className="text-sm hover:text-blue-600 transition-all">
-            &copy; {year} Collab Todo App. All rights reserved.
+            &copy; {year} Project Management System. All rights reserved.
           </p>
         </div>
       </div>

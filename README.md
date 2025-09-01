@@ -1,45 +1,61 @@
-# Collaborative Todo App
+# Project Management System
 
-A modern, real-time collaborative task management application built with the MERN stack. Teams can manage tasks together with live updates, user assignments, drag & drop functionality, and comprehensive activity tracking.
+A modern, real-time collaborative project management system built with the MERN stack (MongoDB, Express, React, Node.js) and Socket.io. Teams can manage projects and tasks together with live updates, user assignments, intuitive drag & drop functionality, project-based organization, and comprehensive activity tracking.
 
 ## 🌐 Live Demo
 
 **🚀 [Try the Live Application](https://collab-todo-app.vercel.app/)**
 
-Experience the full functionality including real-time collaboration, drag & drop task management, and live activity tracking.
+Experience the full functionality including real-time collaboration, comprehensive project management, drag & drop task organization, and live activity tracking across multiple teams.
 
 ## ✨ Features
 
 ### Core Functionality
 
 - **Real-time Collaboration** - Live task updates across all connected users via Socket.io
+- **Project-based Organization** - Organize tasks within projects with dedicated workspaces
 - **User Authentication** - Secure JWT-based authentication with registration and login
 - **Task Management** - Create, edit, delete, and organize tasks with full CRUD operations
-- **User Assignment** - Assign tasks to team members with smart assignment feature
+- **Smart User Assignment** - Assign tasks to team members with intelligent assignment features
 - **Drag & Drop Interface** - Intuitive drag and drop functionality to move tasks between columns
 - **Status Tracking** - Todo, In Progress, and Done columns with visual status management
 - **Priority Levels** - High, Medium, and Low priority tasks with color coding
-- **Activity Logging** - Comprehensive audit trail of all task activities with real-time updates
+- **Task Deadlines** - Set and track task deadlines with visual indicators
+- **Activity Logging** - Comprehensive audit trail of all task and project activities
+
+### Project Management
+
+- **Project Dashboard** - Centralized view of all projects with task statistics
+- **Project Creation** - Create new projects with descriptions and team management
+- **Project-specific Tasks** - Tasks are organized within projects for better structure
+- **Project Collaboration** - Multiple users can collaborate on the same project
+- **Project Activity Tracking** - Monitor all project-related activities in real-time
 
 ### User Experience
 
+- **Modern Dashboard** - Clean project dashboard with comprehensive task statistics
 - **Kanban Board** - Intuitive card-based interface with drag & drop functionality
 - **Responsive Design** - Mobile-first design that works seamlessly on all devices
 - **Modern UI** - Clean interface with light theme and excellent visual hierarchy
 - **Real-time Notifications** - Beautiful toast notifications for all user actions
-- **Interactive Task Cards** - Rich task cards with user information and priority indicators
+- **Interactive Task Cards** - Rich task cards with user information, priority, and deadline indicators
 - **Conflict Resolution** - Smart handling of concurrent edits with user confirmation
+- **Online User Tracking** - See who's currently online and collaborating
 - **Custom Scrollbars** - Styled scrollbars throughout the application
 - **User Identification** - Shows "(You)" for current user's tasks and activities
 - **Smart Delete Confirmation** - Interactive toast confirmations for safe task deletion
+- **Task Assignment Interface** - Dedicated interface for assigning tasks to team members
 
 ### Advanced Features
 
-- **Socket.io Real-time Events** - Dedicated events for task creation, updates, moves, and deletions
+- **Socket.io Real-time Events** - Dedicated events for projects, tasks, and user activities
 - **Optimistic Updates** - Immediate UI feedback with error rollback capability
+- **Project State Management** - Robust state handling for project-based workflows
 - **Network Exposure** - Development server can be accessed from network devices
 - **Touch Support** - Mobile-friendly drag and drop with touch events
 - **Visual Feedback** - Drag states, hover effects, and drop zone highlighting
+- **Error Handling** - Comprehensive error handling with user-friendly messages
+- **Null Safety** - Robust null checks preventing runtime errors
 
 ## 🛠 Tech Stack
 
@@ -70,9 +86,12 @@ Experience the full functionality including real-time collaboration, drag & drop
 
 1. **Visit the Live Demo**: [https://collab-todo-app.vercel.app/](https://collab-todo-app.vercel.app/)
 2. **Register a New Account** or use demo credentials
-3. **Start Creating Tasks** and experience real-time collaboration
-4. **Test Drag & Drop** by moving tasks between columns
-5. **Open Multiple Tabs** to see real-time updates in action
+3. **Create Your First Project** to organize your tasks
+4. **Start Creating Tasks** within your project and experience real-time collaboration
+5. **Test Drag & Drop** by moving tasks between Todo, In Progress, and Done columns
+6. **Invite Team Members** by sharing project access
+7. **Open Multiple Tabs** to see real-time updates in action
+8. **Monitor Activity** in the Activity Log to track all project changes
 
 ### Local Development
 
@@ -112,9 +131,9 @@ Create a `.env` file in the `backend` directory:
 
 ```env
 PORT=3000
-MONGODB_URI=mongodb://localhost:27017/collab-todo-app
+MONGODB_URI=mongodb://localhost:27017/project-management-system
 # For MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/collab-todo-app
+# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/project-management-system
 JWT_SECRET=your_super_secret_jwt_key_here
 JWT_EXPIRES_IN=30d
 NODE_ENV=development
@@ -182,7 +201,7 @@ VITE_WEBSOCKET_URL=http://localhost:3000
 ## 📁 Project Structure
 
 ```
-collab-todo-app/
+project-management-system/
 ├── backend/
 │   ├── src/
 │   │   ├── app.js                        # Express app configuration with CORS
@@ -192,6 +211,7 @@ collab-todo-app/
 │   │   ├── controllers/
 │   │   │   ├── actionLog.controller.js   # Activity logs management
 │   │   │   ├── auth.controller.js        # Authentication logic (register, login, logout)
+│   │   │   ├── projects.controller.js    # Project CRUD operations and management
 │   │   │   └── task.controller.js        # Task CRUD operations and status updates
 │   │   │
 │   │   ├── db/
@@ -203,12 +223,14 @@ collab-todo-app/
 │   │   │
 │   │   ├── models/
 │   │   │   ├── actionLog.model.js        # Activity log schema
-│   │   │   ├── tasks.model.js            # Task schema with validation
-│   │   │   └── user.model.js             # User schema with authentication
+│   │   │   ├── projects.model.js         # Project schema with user references
+│   │   │   ├── tasks.model.js            # Task schema with project and user validation
+│   │   │   └── users.model.js            # User schema with authentication
 │   │   │
 │   │   ├── routes/
 │   │   │   ├── actionLog.route.js        # Activity log API routes
 │   │   │   ├── auth.route.js             # Authentication API routes
+│   │   │   ├── projects.route.js         # Project management API routes
 │   │   │   └── task.route.js             # Task management API routes
 │   │   │
 │   │   └── utils/
@@ -222,7 +244,8 @@ collab-todo-app/
 │   ├── .gitignore                        # Git ignore rules
 │   ├── .prettierignore                   # Prettier ignore rules
 │   ├── .prettierrc                       # Prettier configuration
-│   └── package.json                      # Backend dependencies and scripts
+│   ├── package.json                      # Backend dependencies and scripts
+│   └── vercel.json                       # Vercel deployment configuration
 │
 ├── frontend/
 │   ├── public/
@@ -242,7 +265,11 @@ collab-todo-app/
 │   │   │   ├── Footer.jsx                # Application footer
 │   │   │   ├── TaskCard.jsx              # Rich task cards with drag support
 │   │   │   ├── ConflictResolver.jsx      # Conflict resolution modal
-│   │   │   └── ProtectedRoute.jsx        # Route protection component
+│   │   │   ├── OnlineUsers.jsx           # Online users display component
+│   │   │   ├── ProjectDashboard.jsx      # Project overview and statistics
+│   │   │   ├── ProjectsList.jsx          # List of user projects
+│   │   │   ├── ProjectTasks.jsx          # Project-specific task management
+│   │   │   └── TaskAssignment.jsx        # Task assignment interface
 │   │   │
 │   │   ├── context/
 │   │   │   └── AuthContext.jsx           # Authentication context provider
@@ -259,6 +286,7 @@ collab-todo-app/
 │   │   │   ├── Register.jsx              # User registration page
 │   │   │   ├── Login.jsx                 # User login page
 │   │   │   ├── Logout.jsx                # Logout functionality
+│   │   │   ├── Projects.jsx              # Projects management page
 │   │   │   ├── KanbanBoard.jsx           # Main kanban board with drag & drop
 │   │   │   └── ActionLog.jsx             # Real-time activity log page
 │   │   │
@@ -266,12 +294,15 @@ collab-todo-app/
 │   │   │   ├── Routes.jsx                # Route definitions with protection
 │   │   │   └── ProtectedRoutes.jsx       # Protected route wrapper
 │   │   │
-│   │   └── services/
-│   │       ├── authApi.js                # Authentication API calls
-│   │       ├── taskApi.js                # Task management API calls
-│   │       ├── actionLogApi.js           # Activity log API calls
-│   │       └── socketService.js          # Centralized Socket.io service
-│   │
+│   │   ├── services/
+│   │   │   ├── authApi.js                # Authentication API calls
+│   │   │   ├── projectApi.js             # Project management API calls
+│   │   │   ├── taskApi.js                # Task management API calls
+│   │   │   ├── actionLogApi.js           # Activity log API calls
+│   │   │   └── apiHandler.js             # Centralized API request handler
+│   │   │
+│   │   └── utils/
+│   │       └── conflictUtils.js          # Conflict resolution utilities
 │   │
 │   ├── .env                              # Frontend environment variables
 │   ├── .gitignore                        # Git ignore rules
@@ -280,12 +311,9 @@ collab-todo-app/
 │   ├── eslint.config.js                  # ESLint configuration
 │   ├── index.html                        # HTML template
 │   ├── package.json                      # Frontend dependencies and scripts
-│   ├── postcss.config.js                 # PostCSS configuration
-│   ├── tailwind.config.js                # Tailwind CSS configuration
-│   └── vite.config.js                    # Vite configuration
+│   └── vite.config.js                    # Vite configuration with network support
 │
 ├── .gitignore                            # Root git ignore
-├── Logic_Document.md                     # Logic Document
 └── README.md                             # Project documentation
 ```
 
@@ -297,34 +325,53 @@ collab-todo-app/
 - `POST /login` - User login with JWT token generation
 - `POST /logout` - User logout (protected route)
 
+### Project Routes (`/api/projects`)
+
+- `GET /getprojects` - Get all user projects with task statistics
+- `POST /createproject` - Create new project with name and description
+- `GET /getproject/:id` - Get specific project details with populated data
+- `PATCH /updateproject/:id` - Update project details
+- `DELETE /deleteproject/:id` - Delete project and associated tasks
+
 ### Task Routes (`/api/tasks`)
 
-- `GET /gettask` - Get all tasks with user population
-- `POST /createtask` - Create new task with activity logging
-- `PATCH /updatetask/:id` - Update task details
+- `GET /gettask` - Get all tasks with user and project population
+- `GET /gettask/:projectId` - Get tasks for specific project
+- `POST /createtask` - Create new task with project association and activity logging
+- `PATCH /updatetask/:id` - Update task details with conflict resolution
 - `PATCH /updatetaskstatus/:id` - Update task status via drag & drop
 - `DELETE /deletetask/:id` - Delete task with activity logging
 - `POST /assigntask/:id` - Smart assign task to available user
 
 ### Activity Log Routes (`/api/actionlogs`)
 
-- `GET /getlogs` - Get activity logs with user and task population
+- `GET /getlogs` - Get activity logs with user, task, and project population
+- `GET /getlogs/:projectId` - Get activity logs for specific project
 
 ## 🎯 Usage Guide
 
 ### Getting Started
 
 1. **Register/Login** - Create an account or sign in to access the application
-2. **Dashboard Navigation** - Use the header navigation to switch between Kanban Board and Activity Logs
+2. **Dashboard Navigation** - Use the header navigation to switch between Projects, Kanban Board, and Activity Logs
+3. **Create Your First Project** - Start by creating a project to organize your tasks
+
+### Project Management
+
+1. **Create Projects** - Click "Create Project" to set up new project workspaces
+2. **View Projects** - Access the Projects page to see all your projects with task statistics
+3. **Project Dashboard** - Each project shows task counts by status and recent activity
+4. **Select Project** - Choose a project to work on its specific tasks
 
 ### Task Management
 
-1. **Create Tasks** - Click "Add Task" button to open the task creation modal
-2. **Edit Tasks** - Click on any task card to edit title, description, status, or priority
+1. **Create Tasks** - Click "Add Task" button to open the task creation modal within a project
+2. **Edit Tasks** - Click on any task card to edit title, description, status, priority, or deadline
 3. **Move Tasks** - Drag and drop tasks between Todo, In Progress, and Done columns
 4. **Delete Tasks** - Use the delete button on task cards with interactive confirmation
 5. **Smart Assignment** - Use the "Smart Assign" button in edit mode to automatically assign tasks
 6. **Priority Management** - Set High, Medium, or Low priority with visual color coding
+7. **Deadline Tracking** - Set task deadlines with visual indicators for overdue tasks
 
 ### Drag & Drop Features
 
@@ -335,10 +382,12 @@ collab-todo-app/
 
 ### Real-time Features
 
-- **Live Updates** - See real-time updates when other users modify tasks
-- **Activity Tracking** - Monitor all team activities in the Activity Log page
+- **Live Updates** - See real-time updates when other users modify projects or tasks
+- **Activity Tracking** - Monitor all team activities in the Activity Log page with project filtering
 - **User Identification** - See "(You)" indicator for your own tasks and activities
-- **Socket Notifications** - Get notified when teammates make changes
+- **Socket Notifications** - Get notified when teammates make changes to shared projects
+- **Online Users** - See who's currently online and collaborating
+- **Project Synchronization** - Changes to projects are instantly reflected across all connected users
 
 ## 🔄 Real-time Features
 
@@ -346,19 +395,25 @@ The application uses Socket.io for comprehensive real-time functionality:
 
 ### Socket Events
 
+- **projectCreated** - Broadcast when new projects are created
+- **projectUpdated** - Broadcast when projects are modified
+- **projectDeleted** - Broadcast when projects are removed
 - **taskCreated** - Broadcast when new tasks are created
 - **taskUpdated** - Broadcast when tasks are modified
 - **taskMoved** - Broadcast when tasks are moved via drag & drop
 - **taskDeleted** - Broadcast when tasks are removed
-- **newActivityLog** - Broadcast new activity entries
+- **newActivityLog** - Broadcast new activity entries for projects and tasks
+- **userOnline** - Track online users for collaboration awareness
 
 ### Live Updates
 
-- **Task Synchronization** - All connected clients receive instant updates
+- **Project Synchronization** - All connected clients receive instant project updates
+- **Task Synchronization** - All connected clients receive instant task updates
 - **Drag & Drop Sync** - Real-time task movement across all users
 - **Activity Notifications** - Real-time activity log updates with toast notifications
-- **Conflict Resolution** - Handle concurrent edits with user confirmation
+- **Conflict Resolution** - Handle concurrent edits with user confirmation dialogs
 - **User Status** - Visual indicators for current user's content
+- **Null Safety** - Robust error handling prevents crashes from null references
 
 ## 🎨 UI/UX Features
 
@@ -470,10 +525,14 @@ For development across multiple devices:
 ### Development Guidelines
 
 - Follow the existing code style and patterns
+- Add comprehensive null checks for robust error handling
 - Add comments for complex logic
-- Test drag & drop functionality thoroughly
+- Test drag & drop functionality thoroughly across different browsers
+- Test project-based workflows and data relationships
 - Update documentation if needed
 - Test real-time features with multiple browser tabs
+- Ensure responsive design works on mobile devices
+- Follow the commit message format specified in the project guidelines
 
 ## 👨‍💻 Author
 
@@ -495,23 +554,29 @@ For development across multiple devices:
 
 ## 🐛 Known Issues
 
+- **Fixed**: Null reference errors in ProjectTasks component - resolved with robust null checks
 - None currently reported
 
 ## 🔮 Future Enhancements
 
 - [x] ~~Drag and drop functionality for task status changes~~ ✅ **Completed**
 - [x] ~~Production deployment on Vercel~~ ✅ **Completed**
+- [x] ~~Project-based task organization~~ ✅ **Completed**
+- [x] ~~Enhanced error handling and null safety~~ ✅ **Completed**
+- [ ] Task deadlines and calendar integration
 - [ ] File attachments for tasks
 - [ ] Task comments and discussions
-- [ ] Team management and permissions
-- [ ] Email notifications
+- [ ] Team management and role-based permissions
+- [ ] Email notifications for task assignments
 - [ ] Mobile app development
-- [ ] Advanced filtering and search
+- [ ] Advanced filtering and search across projects
 - [ ] Task templates and recurring tasks
 - [ ] Keyboard shortcuts for power users
 - [ ] Dark/Light theme toggle
-- [ ] Task time tracking
-- [ ] Gantt chart view
-- [ ] Task dependencies
-- [ ] Bulk operations
-- [ ] Export functionality
+- [ ] Task time tracking and reporting
+- [ ] Gantt chart view for project timelines
+- [ ] Task dependencies and blocking relationships
+- [ ] Bulk operations for multiple tasks
+- [ ] Export functionality (PDF, CSV, etc.)
+- [ ] Project archiving and restoration
+- [ ] Advanced user analytics and insights

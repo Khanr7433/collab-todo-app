@@ -11,13 +11,13 @@ const Home = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-            Collaborative Todo App
+            Project Management System
           </h1>
           <p className="text-xl sm:text-2xl text-gray-400 mb-8 leading-relaxed">
-            A modern, real-time collaborative task management application built
-            with the MERN stack. Teams can manage tasks together with live
-            updates, drag & drop functionality, and comprehensive activity
-            tracking.
+            A modern, real-time collaborative project management system built
+            with the MERN stack. Teams can manage projects and tasks together
+            with live updates, drag & drop functionality, and comprehensive
+            activity tracking.
           </p>
 
           {/* CTA Buttons */}
@@ -249,7 +249,7 @@ const Home = () => {
         {/* Key Highlights */}
         <div className="border border-gray-700 rounded-lg p-8 mb-16">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">
-            Why Choose Our Todo App?
+            Why Choose Our Project Management System?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex items-start space-x-3">
@@ -307,8 +307,8 @@ const Home = () => {
             Ready to Get Started?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
-            Join thousands of teams already using our collaborative todo app to
-            manage their projects efficiently.
+            Join thousands of teams already using our project management system
+            to manage their projects efficiently.
           </p>
           {!user && (
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
