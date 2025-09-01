@@ -27,9 +27,8 @@ const ProjectsList = () => {
       setLoading(true);
       const response = await getProjects();
       setProjects(response.data.data.projects || []);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-      toast.error("Failed to load projects");
+    } catch {
+      toast.error("Failed to fetch projects");
     } finally {
       setLoading(false);
     }
@@ -50,7 +49,6 @@ const ProjectsList = () => {
       setShowCreateForm(false);
       toast.success("Project created successfully");
     } catch (error) {
-      console.error("Error creating project:", error);
       toast.error(error.response?.data?.message || "Failed to create project");
     }
   };
@@ -78,7 +76,6 @@ const ProjectsList = () => {
       setEditingProject(null);
       toast.success("Project updated successfully");
     } catch (error) {
-      console.error("Error updating project:", error);
       toast.error(error.response?.data?.message || "Failed to update project");
     }
   };

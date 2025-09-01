@@ -12,15 +12,21 @@ const TaskModal = ({ task, onClose, setConflict }) => {
     status: "Todo",
     priority: "Medium",
   });
+  const [originalTask, setOriginalTask] = useState(null);
 
   useEffect(() => {
     if (task && Object.keys(task).length > 0) {
-      setForm({
+      const taskData = {
         _id: task._id,
         title: task.title || "",
         description: task.description || "",
         status: task.status || "Todo",
         priority: task.priority || "Medium",
+      };
+      setForm(taskData);
+      setOriginalTask({
+        ...task,
+        lastModified: task.updatedAt || new Date().toISOString(),
       });
     } else {
       setForm({
@@ -29,6 +35,7 @@ const TaskModal = ({ task, onClose, setConflict }) => {
         status: "Todo",
         priority: "Medium",
       });
+      setOriginalTask(null);
     }
   }, [task]);
 
@@ -47,7 +54,12 @@ const TaskModal = ({ task, onClose, setConflict }) => {
     try {
       let res;
       if (form._id) {
-        res = await updateTask(form._id, form);
+        // For existing tasks, include lastModified for conflict detection
+        const updateData = {
+          ...form,
+          lastModified: originalTask?.lastModified,
+        };
+        res = await updateTask(form._id, updateData);
         socket.emit("taskUpdated", res.data);
         toast.success("Task updated successfully");
       } else {
@@ -63,8 +75,8 @@ const TaskModal = ({ task, onClose, setConflict }) => {
       }
       onClose();
     } catch (err) {
-      console.error("Error saving task:", err);
       if (err.response?.status === 409) {
+        // Conflict detected - pass the conflict data to parent
         setConflict(err.response.data);
       } else {
         toast.error(err.response?.data?.message || "Failed to save task");
@@ -78,8 +90,7 @@ const TaskModal = ({ task, onClose, setConflict }) => {
       socket.emit("taskUpdated", res.data);
       toast.success("Task assigned successfully");
       onClose();
-    } catch (err) {
-      console.error("Error in smart assign:", err);
+    } catch {
       toast.error("Failed to assign task");
     }
   };

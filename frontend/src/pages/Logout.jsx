@@ -24,7 +24,6 @@ const Logout = () => {
         error.message ||
         "Logout failed. Please try again.";
       toast.error(errorMessage);
-      console.error("Logout error:", error);
     } finally {
       setLoading(false);
     }

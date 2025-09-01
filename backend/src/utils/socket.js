@@ -3,7 +3,7 @@ const onlineUsers = new Map();
 
 const socketHandler = (io) => {
   io.on("connection", (socket) => {
-    console.log("🟢 Client connected:", socket.id);
+    // Client connected
 
     // Handle user going online
     socket.on("userOnline", async (userData) => {
@@ -27,7 +27,7 @@ const socketHandler = (io) => {
 
         io.emit("onlineUsers", onlineUsersData);
       } catch (error) {
-        console.error("Error handling userOnline:", error);
+        // Error handling userOnline - fail silently
       }
     });
 
@@ -70,7 +70,7 @@ const socketHandler = (io) => {
     });
 
     socket.on("disconnect", () => {
-      console.log("🔴 Client disconnected:", socket.id);
+      // Client disconnected
 
       // Remove user from online users when they disconnect
       for (let [userId, userEntry] of onlineUsers.entries()) {

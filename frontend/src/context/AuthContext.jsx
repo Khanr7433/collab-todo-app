@@ -13,8 +13,7 @@ export const AuthProvider = ({ children }) => {
     if (stored && stored !== "undefined") {
       try {
         setUser(JSON.parse(stored));
-      } catch (error) {
-        console.error("Invalid JSON in localStorage:", error);
+      } catch {
         localStorage.removeItem("user");
       }
     }

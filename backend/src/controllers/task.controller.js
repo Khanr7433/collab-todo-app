@@ -85,16 +85,47 @@ const updateTask = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Task ID is required");
   }
 
-  const { title, description, status, priority } = req.body;
+  const { title, description, status, priority, lastModified, forceUpdate } =
+    req.body;
 
   if (!title && !description && !status && !priority) {
     throw new ApiError(400, "At least one field is required for update");
   }
 
-  const task = await Task.findById(id);
+  const task = await Task.findById(id)
+    .populate("assignedTo", "fullName")
+    .populate("createdBy", "fullName");
 
   if (!task) {
     throw new ApiError(404, "Task not found");
+  }
+
+  // Conflict detection: Check if task was modified since client last saw it
+  // Skip conflict detection if forceUpdate is true (user explicitly chose to override)
+  if (
+    !forceUpdate &&
+    lastModified &&
+    new Date(task.updatedAt) > new Date(lastModified)
+  ) {
+    // Task has been modified by another user - return conflict data
+    const conflictData = {
+      isConflict: true,
+      clientTask: req.body, // What the client is trying to save
+      serverTask: {
+        _id: task._id,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        priority: task.priority,
+        updatedAt: task.updatedAt,
+        assignedTo: task.assignedTo,
+        createdBy: task.createdBy,
+      },
+      message:
+        "This task has been modified by another user. Please choose how to resolve the conflict.",
+    };
+
+    return res.status(409).json(conflictData);
   }
 
   if (title) {
@@ -106,7 +137,7 @@ const updateTask = asyncHandler(async (req, res) => {
   }
 
   if (status) {
-    const validStatuses = ["Todo", "in-progress", "completed"];
+    const validStatuses = ["Todo", "In Progress", "Done"];
     if (!validStatuses.includes(status)) {
       throw new ApiError(400, "Invalid status value");
     }
@@ -137,10 +168,14 @@ const updateTask = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Failed to create action log for task update");
   }
 
+  const populatedTask = await Task.findById(updatedTask._id)
+    .populate("assignedTo", "fullName")
+    .populate("createdBy", "fullName");
+
   res
     .status(200)
     .json(
-      new ApiResponse(200, { task: updatedTask }, "Task updated successfully")
+      new ApiResponse(200, { task: populatedTask }, "Task updated successfully")
     );
 });
 
@@ -158,7 +193,7 @@ const updateTaskStatus = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Task not found");
   }
 
-  const validStatuses = ["Todo", "in-progress", "Done"];
+  const validStatuses = ["Todo", "In Progress", "Done"];
 
   if (!validStatuses.includes(status)) {
     throw new ApiError(400, "Invalid status value");

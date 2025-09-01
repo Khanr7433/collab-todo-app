@@ -14,9 +14,8 @@ const ProjectTasks = ({ project, isOpen, onClose }) => {
       setLoading(true);
       const response = await getProjectTasks(project._id);
       setTasks(response.data.data.tasks || []);
-    } catch (error) {
-      console.error("Error fetching project tasks:", error);
-      toast.error("Failed to load project tasks");
+    } catch {
+      toast.error("Failed to fetch project tasks");
     } finally {
       setLoading(false);
     }

@@ -81,7 +81,6 @@ const KanbanBoard = () => {
   };
 
   const handleDragEnd = (e) => {
-    console.log("Drag ended"); // Debug log
     if (e.target) {
       e.target.style.opacity = "1";
     }

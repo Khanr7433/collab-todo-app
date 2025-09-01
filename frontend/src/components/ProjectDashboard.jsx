@@ -17,9 +17,8 @@ const ProjectDashboard = () => {
       setLoading(true);
       const response = await getProjects();
       setProjects(response.data.data.projects || []);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-      toast.error("Failed to load project dashboard");
+    } catch {
+      toast.error("Failed to fetch projects");
     } finally {
       setLoading(false);
     }

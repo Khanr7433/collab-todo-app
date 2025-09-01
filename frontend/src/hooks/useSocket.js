@@ -223,7 +223,6 @@ const useSocket = (setTasks, currentUser = null) => {
     });
 
     socket.on("connect", () => {
-      console.log("Socket connected");
       // Re-emit user online status on reconnect
       if (currentUser) {
         const userId = currentUser?.data?.user?._id || currentUser?._id;
@@ -234,11 +233,11 @@ const useSocket = (setTasks, currentUser = null) => {
     });
 
     socket.on("disconnect", () => {
-      console.log("Socket disconnected");
+      // Socket disconnected
     });
 
     socket.on("reconnect", () => {
-      console.log("Socket reconnected");
+      // Socket reconnected
     });
 
     return () => {

@@ -28,9 +28,8 @@ const TaskAssignment = ({ isOpen, onClose }) => {
 
       setProjects(projectsRes.data.data.projects || []);
       setTasks(tasksRes.data.data.tasks || []);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      toast.error("Failed to load data");
+    } catch {
+      toast.error("Failed to fetch data");
     } finally {
       setLoading(false);
     }
@@ -56,7 +55,6 @@ const TaskAssignment = ({ isOpen, onClose }) => {
       setSelectedTask("");
       setSelectedProject("");
     } catch (error) {
-      console.error("Error assigning task:", error);
       toast.error(error.response?.data?.message || "Failed to assign task");
     } finally {
       setLoading(false);

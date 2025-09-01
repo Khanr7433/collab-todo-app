@@ -29,7 +29,6 @@ const Register = () => {
         error.message ||
         "Registration failed. Please try again.";
       toast.error(errorMessage);
-      console.error("Registration error:", error);
     } finally {
       setLoading(false);
     }

@@ -30,7 +30,6 @@ const Login = () => {
         error.message ||
         "Login failed. Please try again.";
       toast.error(errorMessage);
-      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }
